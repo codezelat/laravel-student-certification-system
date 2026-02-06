@@ -229,7 +229,7 @@ class FormController extends Controller
         $submission->id = 0;
         $submission->full_name = $request->input('name', "Sample Participant Name");
         
-        $path = $certificateService->generate($form, $submission);
+        $path = $certificateService->generate($form, $submission, 1); // scale=1 for fast preview
         
         return response()->file($path)->deleteFileAfterSend();
     }

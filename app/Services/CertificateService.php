@@ -18,12 +18,13 @@ class CertificateService
 
     /**
      * Generate a certificate image with the participant's name.
+     * 
+     * @param Form $form
+     * @param Submission $submission
+     * @param int $scale Scale factor (1 = preview/fast, 3 = high quality download)
      */
-    public function generate(Form $form, Submission $submission): string
+    public function generate(Form $form, Submission $submission, int $scale = 3): string
     {
-        // High Quality Scale Factor
-        $scale = 3;
-
         // Determine dimensions based on orientation
         if ($form->orientation === 'horizontal') {
             $width = self::HORIZONTAL_WIDTH * $scale;
@@ -402,10 +403,12 @@ class CertificateService
 
     /**
      * Generate certificate preview (for displaying in browser).
+     * Uses lower resolution (scale=1) and JPEG for faster loading.
      */
     public function generatePreview(Form $form, Submission $submission): string
     {
-        $tempPath = $this->generate($form, $submission);
+        // Use scale=1 for previews (much faster, ~9x smaller file)
+        $tempPath = $this->generate($form, $submission, 1);
         $imageData = file_get_contents($tempPath);
         unlink($tempPath);
         

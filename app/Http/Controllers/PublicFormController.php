@@ -198,7 +198,7 @@ class PublicFormController extends Controller
         
         $submission = Submission::findOrFail($submissionId);
         
-        $path = $certificateService->generate($form, $submission);
+        $path = $certificateService->generate($form, $submission, 1); // scale=1 for fast preview
         
         return response()->file($path);
     }
