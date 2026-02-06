@@ -15,10 +15,13 @@ class PublicFormController extends Controller
      */
     public function show($slug)
     {
-        $form = Form::where('slug', $slug)
-            ->where('is_active', true)
-            ->with('questions')
-            ->firstOrFail();
+        $form = Form::where('slug', $slug)->firstOrFail();
+
+        if (!$form->is_active) {
+            return view('public.inactive', compact('form'));
+        }
+
+        $form->load('questions');
 
         if ($form->questions->isEmpty()) {
             abort(404, 'This form has no questions.');
@@ -32,9 +35,11 @@ class PublicFormController extends Controller
      */
     public function register(Request $request, $slug)
     {
-        $form = Form::where('slug', $slug)
-            ->where('is_active', true)
-            ->firstOrFail();
+        $form = Form::where('slug', $slug)->firstOrFail();
+        
+        if (!$form->is_active) {
+            return redirect()->route('public.show', $slug);
+        }
 
         $request->validate([
             'full_name' => 'required|string|max:255',
@@ -61,9 +66,12 @@ class PublicFormController extends Controller
     public function question($slug, $index)
     {
         $form = Form::where('slug', $slug)
-            ->where('is_active', true)
             ->with(['questions.answers'])
             ->firstOrFail();
+
+        if (!$form->is_active) {
+            return redirect()->route('public.show', $slug);
+        }
 
         $submissionId = session('submission_id');
         if (!$submissionId) {
@@ -89,9 +97,11 @@ class PublicFormController extends Controller
      */
     public function submitAnswer(Request $request, $slug)
     {
-        $form = Form::where('slug', $slug)
-            ->where('is_active', true)
-            ->firstOrFail();
+        $form = Form::where('slug', $slug)->firstOrFail();
+
+        if (!$form->is_active) {
+            return redirect()->route('public.show', $slug);
+        }
 
         $submissionId = session('submission_id');
         if (!$submissionId) {
