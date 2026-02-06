@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Alpine.js](https://img.shields.io/badge/Alpine.js-3.x-8BC0D0?style=for-the-badge&logo=alpine.js&logoColor=white)
@@ -75,20 +75,20 @@ The crown jewel of this system - a powerful, intuitive certificate customization
 - **Drag & Drop Positioning**: Click and drag the name element to any position on your certificate
 - **Live Preview**: See changes in real-time as you design
 - **Typography Controls**:
-  - Font size (10px - 200px)
-  - Font color (HEX color picker)
-  - Font weight (Normal, Bold)
-  - Font style (Normal, Italic)
+    - Font size (10px - 200px)
+    - Font color (HEX color picker)
+    - Font weight (Normal, Bold)
+    - Font style (Normal, Italic)
 - **Advanced Text Layout**:
-  - **Max Width**: Define text boundary boxes
-  - **Text Alignment**: Left, Center, or Right alignment
-  - **Vertical Alignment**: Top, Middle, or Bottom positioning
-  - **Max Lines**: Control text wrapping (1-5 lines)
-  - **Auto-Scaling**: Intelligent font size reduction for long names
+    - **Max Width**: Define text boundary boxes
+    - **Text Alignment**: Left, Center, or Right alignment
+    - **Vertical Alignment**: Top, Middle, or Bottom positioning
+    - **Max Lines**: Control text wrapping (1-5 lines)
+    - **Auto-Scaling**: Intelligent font size reduction for long names
 - **Background Options**:
-  - Upload custom certificate templates
-  - Support for both Horizontal (Landscape) and Vertical (Portrait) orientations
-  - Fill, Cover, or Contain background modes
+    - Upload custom certificate templates
+    - Support for both Horizontal (Landscape) and Vertical (Portrait) orientations
+    - Fill, Cover, or Contain background modes
 - **Test Mode**: Preview with sample names before publishing
 - **Zoom Controls**: Zoom in/out for precise positioning
 
@@ -104,12 +104,12 @@ The crown jewel of this system - a powerful, intuitive certificate customization
 #### Dashboard Analytics
 
 - **Statistics Overview**:
-  - Total forms count
-  - Active forms count
-  - Total submissions count
+    - Total forms count
+    - Active forms count
+    - Total submissions count
 - **Recent Activity**:
-  - 5 most recent forms
-  - 5 most recent submissions
+    - 5 most recent forms
+    - 5 most recent submissions
 - **Quick Actions**: One-click access to common tasks
 
 ### 🎓 Student Features
@@ -118,9 +118,9 @@ The crown jewel of this system - a powerful, intuitive certificate customization
 
 - **Simple Form**: Only name, email, and mobile number required
 - **Smart Validation**:
-  - Email format verification
-  - Sri Lankan mobile number validation (supports `07x` and `+94` formats)
-  - Required field checking
+    - Email format verification
+    - Sri Lankan mobile number validation (supports `07x` and `+94` formats)
+    - Required field checking
 - **Instant Start**: Begin quiz immediately after registration
 
 #### Quiz Interface
@@ -136,14 +136,14 @@ The crown jewel of this system - a powerful, intuitive certificate customization
 
 - **Instant Results**: Immediate score calculation upon completion
 - **Professional Result Page**:
-  - Glassmorphism design with gradient backgrounds
-  - Animated circular score display
-  - **Score Summary Card**: Shows score, percentage, and pass/fail status
-  - **Certificate Preview Card**: Live preview of the generated certificate
+    - Glassmorphism design with gradient backgrounds
+    - Animated circular score display
+    - **Score Summary Card**: Shows score, percentage, and pass/fail status
+    - **Certificate Preview Card**: Live preview of the generated certificate
 - **High-Quality Downloads**:
-  - 3x DPI resolution for print quality
-  - Automatic filename generation
-  - JPG format for universal compatibility
+    - 3x DPI resolution for print quality
+    - Automatic filename generation
+    - JPG format for universal compatibility
 - **Retake Option**: Allow students to retake the quiz
 - **Mobile Optimized**: Full functionality on smartphones
 
@@ -155,7 +155,7 @@ The crown jewel of this system - a powerful, intuitive certificate customization
 
 | Component        | Technology  | Version  | Purpose                 |
 | ---------------- | ----------- | -------- | ----------------------- |
-| Framework        | Laravel     | 11.x     | Application framework   |
+| Framework        | Laravel     | 12.x     | Application framework   |
 | Language         | PHP         | 8.2+     | Server-side logic       |
 | Database         | SQLite      | 3.x      | Data persistence        |
 | Image Processing | GD Library  | Built-in | Certificate generation  |
@@ -235,18 +235,18 @@ Answer Submission → Score Calculation → Certificate Generation → Download
 
 Before you begin, ensure you have the following installed:
 
-- **PHP**: Version 8.2 or higher
-  ```bash
-  php -v  # Check your PHP version
-  ```
+- **PHP**: Version 8.2 or higher (supports 8.2, 8.3, 8.4+)
+    ```bash
+    php -v  # Check your PHP version
+    ```
 - **Composer**: PHP dependency manager
-  ```bash
-  composer --version
-  ```
+    ```bash
+    composer --version
+    ```
 - **GD Library**: For image processing (usually comes with PHP)
-  ```bash
-  php -m | grep gd
-  ```
+    ```bash
+    php -m | grep gd
+    ```
 - **Git**: For cloning the repository
 
 ### Step-by-Step Installation
@@ -422,145 +422,142 @@ Use the credentials you set in your `.env` file.
 #### Creating Your First Form
 
 1. **Navigate to Forms**
+    - Click "Forms" in the sidebar
+    - Click "Create New Form" button
 
-   - Click "Forms" in the sidebar
-   - Click "Create New Form" button
 2. **Fill Form Details**
 
-   ```
-   Title: "Web Development Certification"
-   Description: "Test your knowledge of HTML, CSS, and JavaScript"
-   Certificate Image: [Upload your certificate template]
-   Orientation: Horizontal
-   ```
-3. **Click "Create Form"**
+    ```
+    Title: "Web Development Certification"
+    Description: "Test your knowledge of HTML, CSS, and JavaScript"
+    Certificate Image: [Upload your certificate template]
+    Orientation: Horizontal
+    ```
 
-   - You'll be redirected to the form edit page
+3. **Click "Create Form"**
+    - You'll be redirected to the form edit page
 
 #### Setting Up the Certificate Designer
 
 1. **Access the Designer**
+    - From the form edit page, click "Design Certificate"
+    - You'll see your uploaded certificate background
 
-   - From the form edit page, click "Design Certificate"
-   - You'll see your uploaded certificate background
 2. **Position the Name**
+    - Click and drag the "Student Name" element to your desired position
+    - Use the zoom controls (+/-) for precise placement
 
-   - Click and drag the "Student Name" element to your desired position
-   - Use the zoom controls (+/-) for precise placement
 3. **Customize Typography**
+    - **Font Size**: Adjust using the slider (e.g., 48px)
+    - **Font Color**: Click the color picker to choose a color (e.g., #1F3A93)
+    - **Font Weight**: Choose Bold for prominence
+    - **Font Style**: Normal or Italic
 
-   - **Font Size**: Adjust using the slider (e.g., 48px)
-   - **Font Color**: Click the color picker to choose a color (e.g., #1F3A93)
-   - **Font Weight**: Choose Bold for prominence
-   - **Font Style**: Normal or Italic
 4. **Configure Text Layout**
+    - **Max Width**: Set to 800px to prevent text overflow
+    - **Text Align**: Choose Center for centered names
+    - **Vertical Align**: Middle to center vertically within the text block
+    - **Max Lines**: Set to 2 to allow wrapping for long names
 
-   - **Max Width**: Set to 800px to prevent text overflow
-   - **Text Align**: Choose Center for centered names
-   - **Vertical Align**: Middle to center vertically within the text block
-   - **Max Lines**: Set to 2 to allow wrapping for long names
 5. **Test Your Design**
+    - Click "Test Preview" button
+    - Enter a long name like "Mohamed Abdullah Ibrahim Al-Rahman"
+    - Verify the text fits properly
+    - Download the preview to check quality
 
-   - Click "Test Preview" button
-   - Enter a long name like "Mohamed Abdullah Ibrahim Al-Rahman"
-   - Verify the text fits properly
-   - Download the preview to check quality
 6. **Save Design**
-
-   - Click "Save Design" button
-   - Your settings are stored in JSON format
+    - Click "Save Design" button
+    - Your settings are stored in JSON format
 
 #### Adding Questions
 
 1. **From the Edit Form Page**
+    - Scroll to the "Questions" section
+    - Click "Add New Question"
 
-   - Scroll to the "Questions" section
-   - Click "Add New Question"
 2. **Create a Question**
 
-   ```
-   Question Text: "What does HTML stand for?"
+    ```
+    Question Text: "What does HTML stand for?"
 
-   Answers:
-   ☐ Hyper Text Markup Language  [✓ Correct]
-   ☐ High Tech Modern Language
-   ☐ Home Tool Markup Language
-   ☐ Hyperlinks and Text Markup Language
-   ```
+    Answers:
+    ☐ Hyper Text Markup Language  [✓ Correct]
+    ☐ High Tech Modern Language
+    ☐ Home Tool Markup Language
+    ☐ Hyperlinks and Text Markup Language
+    ```
+
 3. **Add Multiple Questions**
+    - Repeat the process for each question
+    - Aim for 5-10 questions for a good assessment
 
-   - Repeat the process for each question
-   - Aim for 5-10 questions for a good assessment
 4. **Reorder Questions**
-
-   - Use the drag handles (⋮⋮) to reorder questions
-   - Questions are automatically renumbered
+    - Use the drag handles (⋮⋮) to reorder questions
+    - Questions are automatically renumbered
 
 #### Publishing the Form
 
 1. **Activate the Form**
+    - Go back to "All Forms"
+    - Find your form
+    - Click "Activate"
+    - Status changes from yellow "Inactive" to green "Active"
 
-   - Go back to "All Forms"
-   - Find your form
-   - Click "Activate"
-   - Status changes from yellow "Inactive" to green "Active"
 2. **Share the Link**
+    - Click the "Share" icon (🔗)
+    - Link is automatically copied to clipboard
+    - Paste and share with students
 
-   - Click the "Share" icon (🔗)
-   - Link is automatically copied to clipboard
-   - Paste and share with students
-
-   Example URL: `http://127.0.0.1:8000/form/web-development-abc123`
+    Example URL: `http://127.0.0.1:8000/form/web-development-abc123`
 
 #### Viewing Submissions
 
 1. **Access Submissions**
+    - Click the "Submissions" icon (📋) next to your form
+    - View all student responses
 
-   - Click the "Submissions" icon (📋) next to your form
-   - View all student responses
 2. **Submission Details**
+    - Participant name, email, mobile
+    - Score and percentage
+    - Submission date and time
 
-   - Participant name, email, mobile
-   - Score and percentage
-   - Submission date and time
 3. **Export Data**
-
-   - Click "Export to CSV" button
-   - Opens in Excel for further analysis
+    - Click "Export to CSV" button
+    - Opens in Excel for further analysis
 
 ### For Students
 
 #### Taking a Quiz
 
 1. **Open the Shared Link**
+    - Receive link from instructor
+    - Open in any web browser
 
-   - Receive link from instructor
-   - Open in any web browser
 2. **Register**
 
-   ```
-   Full Name: John Doe
-   Email: john@example.com
-   Mobile: 077 123 4567
-   ```
+    ```
+    Full Name: John Doe
+    Email: john@example.com
+    Mobile: 077 123 4567
+    ```
 
-   - Click "Start Quiz"
+    - Click "Start Quiz"
+
 3. **Answer Questions**
+    - Read each question carefully
+    - Select one answer by clicking the radio button
+    - Click "Next" to proceed
+    - Progress bar shows completion status
 
-   - Read each question carefully
-   - Select one answer by clicking the radio button
-   - Click "Next" to proceed
-   - Progress bar shows completion status
 4. **View Results**
+    - Automatically redirected after last question
+    - See your score immediately
+    - View certificate preview
 
-   - Automatically redirected after last question
-   - See your score immediately
-   - View certificate preview
 5. **Download Certificate**
-
-   - Click "Download Certificate (HQ)" button
-   - Save to your device
-   - Share on social media or print
+    - Click "Download Certificate (HQ)" button
+    - Save to your device
+    - Share on social media or print
 
 ---
 
@@ -568,8 +565,8 @@ Use the credentials you set in your `.env` file.
 
 ### Public Routes
 
-| Method | URI                                   | Controller           | Action              | Description                |
-| ------ | ------------------------------------- | -------------------- | ------------------- | -------------------------- |
+| Method | URI                                 | Controller           | Action              | Description                |
+| ------ | ----------------------------------- | -------------------- | ------------------- | -------------------------- |
 | GET    | `/`                                 | -                    | View                | Home page (simple landing) |
 | GET    | `/form/{slug}`                      | PublicFormController | show                | View registration page     |
 | POST   | `/form/{slug}/register`             | PublicFormController | register            | Submit registration        |
@@ -581,8 +578,8 @@ Use the credentials you set in your `.env` file.
 
 ### Admin Routes (Protected)
 
-| Method | URI                                               | Controller          | Action        | Description          |
-| ------ | ------------------------------------------------- | ------------------- | ------------- | -------------------- |
+| Method | URI                                             | Controller          | Action        | Description          |
+| ------ | ----------------------------------------------- | ------------------- | ------------- | -------------------- |
 | GET    | `/sitc-admin-super`                             | LoginController     | showLoginForm | Admin login page     |
 | POST   | `/sitc-admin-super`                             | LoginController     | login         | Process login        |
 | POST   | `/admin/logout`                                 | LoginController     | logout        | Logout admin         |
@@ -676,8 +673,8 @@ erDiagram
 
 Primary table for questionnaire forms.
 
-| Column                   | Type         | Description                              |
-| ------------------------ | ------------ | ---------------------------------------- |
+| Column                 | Type         | Description                              |
+| ---------------------- | ------------ | ---------------------------------------- |
 | `id`                   | INTEGER      | Primary key                              |
 | `title`                | VARCHAR(255) | Form title                               |
 | `slug`                 | VARCHAR(255) | Unique URL-friendly identifier           |
@@ -711,8 +708,8 @@ Primary table for questionnaire forms.
 
 Stores MCQ questions for each form.
 
-| Column            | Type      | Description           |
-| ----------------- | --------- | --------------------- |
+| Column          | Type      | Description           |
+| --------------- | --------- | --------------------- |
 | `id`            | INTEGER   | Primary key           |
 | `form_id`       | INTEGER   | Foreign key to forms  |
 | `question_text` | TEXT      | The question          |
@@ -724,8 +721,8 @@ Stores MCQ questions for each form.
 
 Multiple choice options for each question.
 
-| Column          | Type      | Description                        |
-| --------------- | --------- | ---------------------------------- |
+| Column        | Type      | Description                        |
+| ------------- | --------- | ---------------------------------- |
 | `id`          | INTEGER   | Primary key                        |
 | `question_id` | INTEGER   | Foreign key to questions           |
 | `answer_text` | TEXT      | Answer option text                 |
@@ -738,8 +735,8 @@ Multiple choice options for each question.
 
 Student quiz submissions.
 
-| Column              | Type         | Description               |
-| ------------------- | ------------ | ------------------------- |
+| Column            | Type         | Description               |
+| ----------------- | ------------ | ------------------------- |
 | `id`              | INTEGER      | Primary key               |
 | `form_id`         | INTEGER      | Foreign key to forms      |
 | `full_name`       | VARCHAR(255) | Student's full name       |
@@ -758,8 +755,8 @@ Computed property:
 
 Individual answers for each submission.
 
-| Column            | Type      | Description                    |
-| ----------------- | --------- | ------------------------------ |
+| Column          | Type      | Description                    |
+| --------------- | --------- | ------------------------------ |
 | `id`            | INTEGER   | Primary key                    |
 | `submission_id` | INTEGER   | Foreign key to submissions     |
 | `question_id`   | INTEGER   | Foreign key to questions       |
@@ -1152,11 +1149,11 @@ We welcome contributions from the community! Here's how you can help:
 
 1. **Check existing issues** to avoid duplicates
 2. **Create a new issue** with:
-   - Clear title
-   - Steps to reproduce
-   - Expected vs actual behavior
-   - Screenshots (if applicable)
-   - Environment details (PHP version, OS, etc.)
+    - Clear title
+    - Steps to reproduce
+    - Expected vs actual behavior
+    - Screenshots (if applicable)
+    - Environment details (PHP version, OS, etc.)
 
 ### Suggesting Features
 
@@ -1169,25 +1166,25 @@ We welcome contributions from the community! Here's how you can help:
 
 1. **Fork the repository**
 2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
+    ```bash
+    git checkout -b feature/amazing-feature
+    ```
 3. **Make your changes**
-   - Follow Laravel coding standards
-   - Add comments for complex logic
-   - Update documentation if needed
+    - Follow Laravel coding standards
+    - Add comments for complex logic
+    - Update documentation if needed
 4. **Commit your changes**
-   ```bash
-   git commit -m "Add amazing feature"
-   ```
+    ```bash
+    git commit -m "Add amazing feature"
+    ```
 5. **Push to your fork**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
+    ```bash
+    git push origin feature/amazing-feature
+    ```
 6. **Open a Pull Request**
-   - Describe what you changed
-   - Reference any related issues
-   - Request review
+    - Describe what you changed
+    - Reference any related issues
+    - Request review
 
 ### Development Guidelines
 
