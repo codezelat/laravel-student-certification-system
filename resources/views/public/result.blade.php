@@ -1,406 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificate - {{ $form->title }}</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('images/sitc-fav-150x150.png') }}">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #10b981;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --bg-input: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border: #334155;
-            --radius: 16px;
-            --radius-sm: 10px;
-        }
-
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-        
-        .logo-img {
-            height: 70px;
-            width: auto;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding: 2rem 1rem;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .celebration-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            animation: bounce 1s ease infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary-light, #818cf8), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        @media (max-width: 800px) {
-            .results-grid {
-                grid-template-columns: 1fr;
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    },
+                    animation: {
+                        bounce: 'bounce 1s infinite',
+                    }
+                }
             }
         }
-
-        .score-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 2rem;
-        }
-
-        .score-card h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-secondary);
-        }
-
-        .score-display {
-            text-align: center;
-            padding: 2rem;
-            background: var(--bg-input);
-            border-radius: var(--radius-sm);
-            margin-bottom: 1.5rem;
-        }
-
-        .score-circle {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
-        }
-
-        .score-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        .score-label {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-
-        .score-percentage {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-
-        .participant-info {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .info-value {
-            font-weight: 500;
-        }
-
-        .certificate-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 2rem;
-        }
-
-        .certificate-card h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            color: var(--text-secondary);
-        }
-
-        .certificate-preview {
-            background: var(--bg-input);
-            border-radius: var(--radius-sm);
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .certificate-preview img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .certificate-placeholder {
-            padding: 3rem;
-            background: linear-gradient(135deg, #fef9e7, #fdf5e6);
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            color: #333;
-        }
-
-        .certificate-placeholder h3 {
-            font-size: 1.5rem;
-            color: #8B4513;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.1em;
-        }
-
-        .certificate-placeholder .subtitle {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .certificate-placeholder .name {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #003366;
-            padding: 0.5rem 2rem;
-            border-bottom: 2px solid #8B4513;
-            display: inline-block;
-            margin: 0.5rem 0;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            width: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--bg-input);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            margin-top: 1rem;
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-card);
-        }
-
-        .confetti {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        .confetti-piece {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            animation: confetti-fall 4s ease-out forwards;
-        }
-
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-    </style>
+    </script>
 </head>
-<body>
-    <div class="confetti" id="confetti"></div>
+<body class="h-full bg-gray-50 flex flex-col">
+    <!-- Confetti Container -->
+    <div id="confetti" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
 
-    <div class="container">
-        <div class="logo-container">
-            <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC" class="logo-img">
-        </div>
-
-        <div class="header">
-            <div class="celebration-icon">🎉</div>
-            <h1>Congratulations!</h1>
-            <p>You have completed the {{ $form->title }}</p>
-        </div>
-
-        <div class="results-grid">
-            <div class="score-card">
-                <h2>📊 Your Score</h2>
-                
-                <div class="score-display">
-                    <div class="score-circle">
-                        <span class="score-value">{{ $submission->score }}/{{ $submission->total_questions }}</span>
-                        <span class="score-label">Correct</span>
-                    </div>
-                    <div class="score-percentage">{{ $submission->score_percentage }}%</div>
+    <main class="flex-grow p-4 sm:p-6 lg:p-8">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <div class="mb-4 inline-block animate-bounce">
+                    <span class="text-6xl">🎉</span>
                 </div>
-
-                <div class="participant-info">
-                    <div class="info-row">
-                        <span class="info-label">Name</span>
-                        <span class="info-value">{{ $submission->full_name }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Email</span>
-                        <span class="info-value">{{ $submission->email }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Completed</span>
-                        <span class="info-value">{{ $submission->created_at->format('M d, Y') }}</span>
-                    </div>
-                </div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
+                    Congratulations!
+                </h1>
+                <p class="text-lg text-gray-600">
+                    You have successfully completed the <span class="font-semibold text-primary-600">{{ $form->title }}</span>
+                </p>
             </div>
 
-            <div class="certificate-card">
-                <h2>🏆 Your Certificate</h2>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
                 
-                <div class="certificate-preview">
-                    @if($form->certificate_image)
-                        <div style="position: relative;">
-                            <img src="{{ Storage::url($form->certificate_image) }}" alt="Certificate Background">
-                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                                        font-size: 1.5rem; font-weight: 700; color: #003366; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">
-                                {{ $submission->full_name }}
-                            </div>
+                <!-- Score Card -->
+                <div class="md:col-span-5 space-y-6">
+                    <div class="bg-white shadow-xl rounded-2xl border border-gray-100 overflow-hidden">
+                        <div class="px-6 py-5 border-b border-gray-50 bg-gray-50/50">
+                            <h2 class="text-lg font-bold text-gray-900 flex items-center">
+                                <span class="mr-2">📊</span> Your Results
+                            </h2>
                         </div>
-                    @else
-                        <div class="certificate-placeholder">
-                            <h3>CERTIFICATE</h3>
-                            <div class="subtitle">OF PARTICIPATION</div>
-                            <p style="color: #666; font-size: 0.9rem;">This is to certify that</p>
-                            <div class="name">{{ $submission->full_name }}</div>
-                            <p style="color: #666; font-size: 0.85rem; margin-top: 1rem;">
-                                has successfully completed the {{ $form->title }}
+                        <div class="p-8 text-center">
+                            <div class="inline-flex items-center justify-center w-40 h-40 rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 shadow-lg shadow-primary-500/30 mb-6">
+                                <div class="text-center text-white">
+                                    <div class="text-4xl font-bold">{{ $submission->score }}/{{ $submission->total_questions }}</div>
+                                    <div class="text-xs font-medium uppercase tracking-wider opacity-80 mt-1">Correct</div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-2xl font-bold text-gray-900 mb-1">{{ $submission->score_percentage }}% Score</div>
+                            <p class="text-sm text-gray-500">
+                                @if($submission->score_percentage >= 50)
+                                    Great job! You passed the quiz.
+                                @else
+                                    Good effort! Keep learning.
+                                @endif
                             </p>
                         </div>
-                    @endif
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-100">
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Name</span>
+                                    <span class="font-medium text-gray-900">{{ $submission->full_name }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Email</span>
+                                    <span class="font-medium text-gray-900">{{ $submission->email }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500">Date</span>
+                                    <span class="font-medium text-gray-900">{{ $submission->created_at->format('M d, Y') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('public.show', $form->slug) }}" class="block w-full text-center py-3 px-4 border border-gray-300 rounded-xl shadow-sm text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all">
+                        Take Quiz Again
+                    </a>
                 </div>
 
-                <a href="{{ route('public.certificate.download', $form->slug) }}" class="btn btn-primary">
-                    ⬇️ Download Certificate
-                </a>
+                <!-- Certificate Card -->
+                <div class="md:col-span-7">
+                    <div class="bg-white shadow-xl rounded-2xl border border-gray-100 overflow-hidden h-full flex flex-col">
+                        <div class="px-6 py-5 border-b border-gray-50 bg-gray-50/50">
+                            <h2 class="text-lg font-bold text-gray-900 flex items-center">
+                                <span class="mr-2">🏆</span> Your Certificate
+                            </h2>
+                        </div>
+                        <div class="p-6 flex-grow flex flex-col items-center justify-center bg-gray-50/30">
+                            <div class="relative w-full rounded-lg shadow-lg overflow-hidden border border-gray-200 group">
+                                @if($form->certificate_image)
+                                    <img src="{{ Storage::url($form->certificate_image) }}" alt="Certificate" class="w-full h-auto">
+                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <!-- Overlay Name (Simulated preview) -->
+                                        <span class="text-2xl sm:text-3xl font-bold text-blue-900 drop-shadow-md transform translate-y-4">
+                                            {{ $submission->full_name }}
+                                        </span>
+                                    </div>
+                                @else
+                                    <div class="bg-[#fdf5e6] p-8 text-center min-h-[300px] flex flex-col items-center justify-center">
+                                        <div class="text-2xl text-yellow-800 font-serif mb-2">CERTIFICATE</div>
+                                        <div class="text-sm text-gray-500 mb-6 uppercase tracking-widest">Of Participation</div>
+                                        <div class="text-3xl font-bold text-blue-900 font-serif border-b-2 border-yellow-800 pb-2 mb-4 px-8">{{ $submission->full_name }}</div>
+                                        <p class="text-gray-600 text-sm">Has successfully completed the {{ $form->title }}</p>
+                                    </div>
+                                @endif
+                                
+                                <!-- Hover Overlay hint -->
+                                <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span class="bg-white/90 backdrop-blur text-gray-800 px-4 py-2 rounded-full text-xs font-semibold shadow-sm">Preview</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white border-t border-gray-100">
+                             <a href="{{ route('public.certificate.download', $form->slug) }}" class="w-full flex justify-center py-4 px-6 border border-transparent rounded-xl shadow-lg text-base font-bold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transform hover:-translate-y-1 transition-all duration-200">
+                                <svg class="mr-2 -ml-1 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download Certificate
+                            </a>
+                            <p class="mt-3 text-center text-xs text-gray-400">
+                                High-quality PNG format ready for printing.
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                <a href="{{ route('public.show', $form->slug) }}" class="btn btn-secondary">
-                    Take Quiz Again
-                </a>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        // Create confetti on page load
+        // Confetti Effect
         function createConfetti() {
-            const confettiContainer = document.getElementById('confetti');
+            const container = document.getElementById('confetti');
             const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#8b5cf6'];
             
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 60; i++) {
                 const piece = document.createElement('div');
-                piece.className = 'confetti-piece';
-                piece.style.left = Math.random() * 100 + '%';
-                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-                piece.style.animationDelay = Math.random() * 2 + 's';
-                piece.style.animationDuration = (3 + Math.random() * 2) + 's';
-                confettiContainer.appendChild(piece);
-            }
+                piece.style.position = 'absolute';
+                piece.style.width = Math.random() * 8 + 6 + 'px';
+                piece.style.height = Math.random() * 8 + 6 + 'px';
+                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.left = Math.random() * 100 + 'vw';
+                piece.style.top = -20 + 'px';
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                piece.style.opacity = Math.random() * 0.5 + 0.5;
+                
+                // Random animation properties
+                const duration = Math.random() * 3 + 3; // 3-6s
+                const delay = Math.random() * 2; // 0-2s
+                
+                piece.style.transition = `top ${duration}s ease-in, transform ${duration}s linear, opacity ${duration}s ease-in`;
+                
+                container.appendChild(piece);
 
-            // Remove confetti after animation
-            setTimeout(() => {
-                confettiContainer.innerHTML = '';
-            }, 6000);
+                // Trigger animation
+                setTimeout(() => {
+                   piece.style.top = '110vh';
+                   piece.style.transform = `rotate(${Math.random() * 720}deg) translateX(${Math.random() * 100 - 50}px)`;
+                   piece.style.opacity = '0';
+                }, delay * 100);
+            }
         }
 
-        createConfetti();
+        // Run confetti on load
+        window.addEventListener('load', createConfetti);
     </script>
 </body>
 </html>

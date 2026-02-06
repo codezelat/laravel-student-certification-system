@@ -1,300 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question {{ $index + 1 }} - {{ $form->title }}</title>
+    <title>{{ $form->title }} - Question {{ $index + 1 }}</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('images/sitc-fav-150x150.png') }}">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --bg-input: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border: #334155;
-            --secondary: #10b981;
-            --radius: 16px;
-            --radius-sm: 10px;
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
         }
-
-        .quiz-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .logo-img {
-            height: 60px;
-            width: auto;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: var(--bg-input);
-            border-radius: 3px;
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        .progress-text {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .card {
-            background: rgba(30, 41, 59, 0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(51, 65, 85, 0.5);
-            border-radius: var(--radius);
-            padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .question-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 10px;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .question-text {
-            font-size: 1.25rem;
-            font-weight: 600;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-
-        .answers {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-        }
-
-        .answer-option {
-            position: relative;
-        }
-
-        .answer-option input {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .answer-label {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.25rem;
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .answer-label:hover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-        }
-
-        .answer-option input:checked + .answer-label {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.15);
-        }
-
-        .answer-marker {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            flex-shrink: 0;
-        }
-
-        .answer-option input:checked + .answer-label .answer-marker {
-            border-color: var(--primary);
-            background: var(--primary);
-        }
-
-        .answer-option input:checked + .answer-label .answer-marker::after {
-            content: '✓';
-            color: white;
-            font-size: 0.8rem;
-        }
-
-        .answer-text {
-            font-size: 1rem;
-            line-height: 1.4;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border: none;
-            border-radius: var(--radius-sm);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .animated-bg .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.03));
-            animation: float 25s infinite ease-in-out;
-        }
-
-        .circle:nth-child(1) { width: 400px; height: 400px; top: -100px; right: -100px; }
-        .circle:nth-child(2) { width: 350px; height: 350px; bottom: -80px; left: -80px; animation-delay: -8s; }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, -30px); }
-        }
-    </style>
+    </script>
 </head>
-<body>
-    <div class="animated-bg">
-        <div class="circle"></div>
-        <div class="circle"></div>
+<body class="h-full bg-gray-50 flex flex-col">
+    
+    <!-- Progress Bar (Fixed Top) -->
+    <div class="fixed top-0 left-0 w-full h-1.5 bg-gray-200 z-50">
+        <div class="h-full bg-gradient-to-r from-primary-500 to-indigo-600 transition-all duration-500 ease-out" style="width: {{ $progress }}%"></div>
     </div>
 
-    <div class="container">
-        <div class="quiz-header">
-            <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC" class="logo-img">
+    <!-- Main Content -->
+    <main class="flex-grow flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10">
+        <!-- Decoration -->
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-0 right-0 w-[50%] h-[50%] rounded-full bg-indigo-50 blur-3xl opacity-50"></div>
+            <div class="absolute bottom-0 left-0 w-[50%] h-[50%] rounded-full bg-blue-50 blur-3xl opacity-50"></div>
         </div>
 
-        <div class="progress-text">
-            <span>Question {{ $index + 1 }} of {{ $totalQuestions }}</span>
-            <span>{{ $progress }}% Complete</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: {{ $progress }}%"></div>
-        </div>
+        <div class="w-full max-w-2xl relative z-10">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-3">
+                    <img src="{{ asset('images/sitc-logo.png') }}" alt="Logo" class="h-10 w-auto">
+                    <span class="h-5 w-px bg-gray-300"></span>
+                    <span class="text-sm font-medium text-gray-500">
+                        Question {{ $index + 1 }} of {{ $totalQuestions }}
+                    </span>
+                </div>
+                <div class="text-sm font-bold text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
+                    {{ $progress }}% Completed
+                </div>
+            </div>
 
-        <div class="card">
-            <div class="question-number">{{ $index + 1 }}</div>
-            <h2 class="question-text">{{ $question->question_text }}</h2>
+            <!-- Question Card -->
+            <div class="bg-white shadow-xl rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="p-6 sm:p-10">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight mb-8">
+                        {{ $question->question_text }}
+                    </h2>
 
-            <form action="{{ route('public.answer', $form->slug) }}" method="POST" id="answerForm">
-                @csrf
-                <input type="hidden" name="question_id" value="{{ $question->id }}">
-                <input type="hidden" name="current_index" value="{{ $index }}">
+                    <form action="{{ route('public.answer', $form->slug) }}" method="POST" id="answerForm" class="space-y-4">
+                        @csrf
+                        <input type="hidden" name="question_id" value="{{ $question->id }}">
+                        <input type="hidden" name="current_index" value="{{ $index }}">
 
-                <div class="answers">
-                    @foreach($question->answers as $answer)
-                        <div class="answer-option">
-                            <input type="radio" 
-                                   name="answer_id" 
-                                   id="answer_{{ $answer->id }}" 
-                                   value="{{ $answer->id }}"
-                                   required>
-                            <label class="answer-label" for="answer_{{ $answer->id }}">
-                                <span class="answer-marker"></span>
-                                <span class="answer-text">{{ $answer->answer_text }}</span>
-                            </label>
+                        <div class="space-y-3">
+                            @foreach($question->answers as $answer)
+                                <label class="group relative flex items-center p-4 rounded-xl border-2 border-gray-200 cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition-all duration-200">
+                                    <input type="radio" 
+                                           name="answer_id" 
+                                           value="{{ $answer->id }}" 
+                                           class="peer sr-only" 
+                                           required>
+                                    
+                                    <!-- Checked State Styles (via peer) -->
+                                    <div class="absolute inset-0 rounded-xl border-2 border-transparent peer-checked:border-primary-500 peer-checked:bg-primary-50/50 transition-all pointer-events-none"></div>
+                                    
+                                    <div class="flex items-center justify-center h-6 w-6 rounded-full border-2 border-gray-300 bg-white group-hover:border-gray-400 peer-checked:border-primary-500 peer-checked:bg-primary-500 transition-all z-10 mr-4 flex-shrink-0">
+                                        <svg class="h-3 w-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    
+                                    <span class="text-lg text-gray-700 font-medium peer-checked:text-primary-900 z-10">{{ $answer->answer_text }}</span>
+                                </label>
+                            @endforeach
                         </div>
-                    @endforeach
-                </div>
 
-                <div class="actions">
-                    <button type="submit" class="btn" id="submitBtn">
-                        @if($index + 1 >= $totalQuestions)
-                            Complete Quiz <span>✓</span>
-                        @else
-                            Next Question <span>→</span>
-                        @endif
-                    </button>
+                        <div class="pt-8 flex justify-end">
+                            <button type="submit" id="submitBtn" class="inline-flex items-center justify-center px-8 py-3.5 border border-transparent text-base font-bold rounded-xl text-white bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg shadow-primary-500/30 transform hover:-translate-y-0.5 transition-all duration-200">
+                                @if($index + 1 >= $totalQuestions)
+                                    Complete Quiz
+                                    <svg class="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                @else
+                                    Next Question
+                                    <svg class="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                @endif
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+            
+            <div class="mt-6 text-center text-xs text-gray-400">
+                Powered by SITC Certifier
+            </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        // Disable double-submit
+        // Disable double-submit and show loading state
         document.getElementById('answerForm').addEventListener('submit', function() {
-            document.getElementById('submitBtn').disabled = true;
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            btn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
         });
     </script>
 </body>

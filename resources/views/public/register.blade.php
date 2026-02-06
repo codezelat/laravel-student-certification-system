@@ -1,288 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $form->title }} - {{ config('app.name') }}</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('images/sitc-fav-150x150.png') }}">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --bg-input: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border: #334155;
-            --danger: #ef4444;
-            --radius: 16px;
-            --radius-sm: 10px;
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
         }
-
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        .logo-img {
-            height: 80px;
-            width: auto;
-            border-radius: var(--radius-sm);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .card {
-            background: rgba(30, 41, 59, 0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(51, 65, 85, 0.5);
-            border-radius: var(--radius);
-            padding: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
-        }
-
-        .title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .form-label .required {
-            color: var(--danger);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            font-size: 1rem;
-            background: rgba(51, 65, 85, 0.5);
-            border: 1px solid rgba(51, 65, 85, 0.8);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
-            background: rgba(51, 65, 85, 0.8);
-        }
-
-        .form-control::placeholder {
-            color: var(--text-muted);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border: none;
-            border-radius: var(--radius-sm);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #f87171;
-        }
-
-        .info-box {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: var(--radius-sm);
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .info-box .info-icon {
-            font-size: 1.25rem;
-        }
-
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .animated-bg .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.03));
-            animation: float 25s infinite ease-in-out;
-        }
-
-        .circle:nth-child(1) { width: 500px; height: 500px; top: -150px; right: -150px; }
-        .circle:nth-child(2) { width: 400px; height: 400px; bottom: -100px; left: -100px; animation-delay: -8s; }
-        .circle:nth-child(3) { width: 300px; height: 300px; top: 40%; left: 60%; animation-delay: -15s; }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(40px, -40px) rotate(5deg); }
-            66% { transform: translate(-30px, 30px) rotate(-3deg); }
-        }
-    </style>
+    </script>
 </head>
-<body>
-    <div class="animated-bg">
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+<body class="h-full flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    
+    <!-- Background decoration -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-[10%] right-[10%] w-[30%] h-[30%] rounded-full bg-indigo-50 blur-3xl opacity-60"></div>
+        <div class="absolute bottom-[10%] left-[10%] w-[20%] h-[20%] rounded-full bg-blue-50 blur-3xl opacity-60"></div>
     </div>
 
-    <div class="container">
-        <div class="card">
-            <div class="header">
-                <div class="logo-container">
-                    <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC" class="logo-img">
-                </div>
-                <h1 class="title">{{ $form->title }}</h1>
-                @if($form->description)
-                    <p class="subtitle">{{ $form->description }}</p>
-                @else
-                    <p class="subtitle">Complete this questionnaire to receive your certificate</p>
-                @endif
+    <div class="max-w-lg w-full space-y-8 relative z-10">
+        <div class="text-center">
+             <div class="mx-auto h-20 w-auto flex items-center justify-center mb-6">
+                <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC Logo" class="h-full object-contain drop-shadow-sm">
             </div>
+            <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
+                {{ $form->title }}
+            </h1>
+            <p class="mt-4 text-lg text-gray-600">
+                {{ $form->description ?? 'Complete this questionnaire to receive your certification.' }}
+            </p>
+        </div>
 
-            <div class="info-box">
-                <span class="info-icon">📋</span>
-                <span>{{ $form->questions->count() }} questions • Receive certificate upon completion</span>
+        <div class="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100">
+            <div class="mb-6 flex items-center p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                <div class="flex-shrink-0">
+                    <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-indigo-800">
+                        {{ $form->questions->count() }} Questions
+                    </h3>
+                    <div class="text-sm text-indigo-700">
+                        Receive your certificate instantly upon passing.
+                    </div>
+                </div>
             </div>
 
             @if($errors->any())
-                <div class="alert">
-                    @foreach($errors->all() as $error)
-                        {{ $error }}<br>
-                    @endforeach
+                <div class="rounded-xl bg-red-50 p-4 border border-red-100 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">
+                                Please fix the following errors
+                            </h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                <ul class="list-disc pl-5 space-y-1">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
 
-            <form action="{{ route('public.register', $form->slug) }}" method="POST">
+            <form action="{{ route('public.register', $form->slug) }}" method="POST" class="space-y-6">
                 @csrf
                 
-                <div class="form-group">
-                    <label class="form-label">Full Name <span class="required">*</span></label>
-                    <input type="text" 
-                           name="full_name" 
-                           class="form-control" 
-                           placeholder="Enter your full name"
-                           value="{{ old('full_name') }}"
-                           required>
+                <div>
+                    <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <div class="mt-1">
+                        <input id="full_name" name="full_name" type="text" autocomplete="name" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-shadow" placeholder="John Doe" value="{{ old('full_name') }}">
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">This name will appear on your certificate.</p>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Email Address <span class="required">*</span></label>
-                    <input type="email" 
-                           name="email" 
-                           class="form-control" 
-                           placeholder="your@email.com"
-                           value="{{ old('email') }}"
-                           required>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <div class="mt-1">
+                        <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-shadow" placeholder="john@example.com" value="{{ old('email') }}">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Mobile Number <span class="required">*</span></label>
-                    <input type="tel" 
-                           name="mobile" 
-                           class="form-control" 
-                           placeholder="+94 XX XXX XXXX"
-                           value="{{ old('mobile') }}"
-                           required>
+                <div>
+                    <label for="mobile" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+                    <div class="mt-1">
+                        <input id="mobile" name="mobile" type="tel" autocomplete="tel" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-shadow" placeholder="+94 7X XXX XXXX" value="{{ old('mobile') }}">
+                    </div>
                 </div>
 
-                <button type="submit" class="btn">
-                    Start Quiz <span>→</span>
-                </button>
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transform hover:-translate-y-0.5 transition-all duration-200">
+                        Start Quiz &rarr;
+                    </button>
+                </div>
             </form>
+        </div>
+        
+        <div class="text-center">
+            <p class="text-xs text-gray-400">
+                &copy; {{ date('Y') }} SITC Certifier. All rights reserved.
+            </p>
         </div>
     </div>
 </body>
