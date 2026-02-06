@@ -16,7 +16,7 @@ class AdminAuth
     public function handle(Request $request, Closure $next): Response
     {
         if (!session('admin_authenticated')) {
-            return redirect()->route('admin.login')->with('error', 'Please login to access admin panel.');
+            abort(404);
         }
 
         return $next($request);

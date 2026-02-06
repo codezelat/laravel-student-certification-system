@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Home redirects to admin login
+// Home - Simple landing page
 Route::get('/', function () {
-    return redirect()->route('admin.login');
-});
+    return view('public.home');
+})->name('home');
 
-// Auth Routes
-Route::get('/admin/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login.post');
+// Auth Routes - Obscured Admin Login
+Route::get('/sitc-admin-super', [LoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/sitc-admin-super', [LoginController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
 // Admin Routes (protected)
