@@ -79,71 +79,10 @@ class CertificateService
     {
         $image = imagecreatetruecolor($width, $height);
         
-        // Cream/off-white background
-        $bgColor = imagecolorallocate($image, 255, 250, 240);
+        // White background
+        $bgColor = imagecolorallocate($image, 255, 255, 255);
         imagefill($image, 0, 0, $bgColor);
         
-        // Add a border
-        $borderColor = imagecolorallocate($image, 139, 90, 43);
-        $borderWidth = 20;
-        
-        // Outer border
-        imagerectangle($image, $borderWidth, $borderWidth, $width - $borderWidth, $height - $borderWidth, $borderColor);
-        imagerectangle($image, $borderWidth + 5, $borderWidth + 5, $width - $borderWidth - 5, $height - $borderWidth - 5, $borderColor);
-        
-        // Add "CERTIFICATE" text at top
-        $titleColor = imagecolorallocate($image, 51, 51, 51);
-        $title = "CERTIFICATE";
-        
-        // Use default font
-        $fontPath = $this->getFontPath();
-        if ($fontPath) {
-            $fontSize = ($width > $height) ? 48 : 36;
-            $bbox = imagettfbbox($fontSize, 0, $fontPath, $title);
-            $titleX = ($width - ($bbox[2] - $bbox[0])) / 2;
-            $titleY = ($height > $width) ? 150 : 120;
-            imagettftext($image, $fontSize, 0, (int)$titleX, (int)$titleY, $titleColor, $fontPath, $title);
-            
-            // Add "OF PARTICIPATION" subtitle
-            $subtitle = "OF PARTICIPATION";
-            $subFontSize = ($width > $height) ? 24 : 18;
-            $bbox = imagettfbbox($subFontSize, 0, $fontPath, $subtitle);
-            $subtitleX = ($width - ($bbox[2] - $bbox[0])) / 2;
-            $subtitleY = $titleY + 50;
-            imagettftext($image, $subFontSize, 0, (int)$subtitleX, (int)$subtitleY, $titleColor, $fontPath, $subtitle);
-            
-            // Add "This is to certify that" text
-            $certifyText = "This is to certify that";
-            $certifyFontSize = ($width > $height) ? 18 : 14;
-            $bbox = imagettfbbox($certifyFontSize, 0, $fontPath, $certifyText);
-            $certifyX = ($width - ($bbox[2] - $bbox[0])) / 2;
-            $certifyY = $height / 2 - 60;
-            $grayColor = imagecolorallocate($image, 100, 100, 100);
-            imagettftext($image, $certifyFontSize, 0, (int)$certifyX, (int)$certifyY, $grayColor, $fontPath, $certifyText);
-            
-            // Add Logo to Certificate
-            $logoPath = public_path('images/sitc-logo.png');
-            if (file_exists($logoPath)) {
-                $logo = @imagecreatefrompng($logoPath);
-                if ($logo) {
-                    $logoWidth = imagesx($logo);
-                    $logoHeight = imagesy($logo);
-                    
-                    // Target width for logo (e.g., 150px)
-                    $targetLogoWidth = 150;
-                    $targetLogoHeight = ($logoHeight / $logoWidth) * $targetLogoWidth;
-                    
-                    // Position at bottom center
-                    $logoX = ($width - $targetLogoWidth) / 2;
-                    $logoY = $height - $borderWidth - $targetLogoHeight - 50;
-                    
-                    imagecopyresampled($image, $logo, (int)$logoX, (int)$logoY, 0, 0, (int)$targetLogoWidth, (int)$targetLogoHeight, $logoWidth, $logoHeight);
-                    imagedestroy($logo);
-                }
-            }
-
-        }
-
         return $image;
     }
 
@@ -175,13 +114,6 @@ class CertificateService
             $nameY = $height / 2 + 20;
             
             imagettftext($image, $fontSize, 0, (int)$nameX, (int)$nameY, $textColor, $fontPath, $name);
-            
-            // Add underline below the name
-            $lineColor = imagecolorallocate($image, 139, 90, 43);
-            $lineY = $nameY + 20;
-            $lineStartX = ($width - $nameWidth) / 2 - 20;
-            $lineEndX = ($width + $nameWidth) / 2 + 20;
-            imageline($image, (int)$lineStartX, (int)$lineY, (int)$lineEndX, (int)$lineY, $lineColor);
         } else {
             // Fallback to built-in font
             $textWidth = imagefontwidth(5) * strlen($name);
