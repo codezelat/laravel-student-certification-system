@@ -7,6 +7,7 @@
     <title>@yield('title', 'Admin') - {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="{{ asset('images/sitc-fav-150x150.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -74,15 +75,11 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .sidebar-brand .icon {
-            width: 40px;
+        /* Updated Logo Style */
+        .sidebar-brand .logo-img {
             height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            width: auto;
             border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
         }
 
         .sidebar-nav {
@@ -524,7 +521,7 @@
     <div class="app-layout">
         <aside class="sidebar">
             <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
-                <span class="icon">🎓</span>
+                <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC" class="logo-img">
                 <span>SITC Certifier</span>
             </a>
 

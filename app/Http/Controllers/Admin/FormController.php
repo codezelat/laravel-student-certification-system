@@ -131,11 +131,44 @@ class FormController extends Controller
     }
 
     /**
-     * Export submissions to Excel.
+     * Export submissions to CSV (Excel compatible).
      */
     public function export(Form $form)
     {
-        $fileName = 'submissions-' . $form->slug . '-' . date('Y-m-d') . '.xlsx';
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\SubmissionsExport($form), $fileName);
+        $fileName = 'submissions-' . $form->slug . '-' . date('Y-m-d') . '.csv';
+        
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $columns = ['ID', 'Full Name', 'Email', 'Mobile', 'Score', 'Total Questions', 'Percentage', 'Submitted At'];
+
+        $callback = function() use ($form, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            $form->submissions()->chunk(100, function($submissions) use ($file) {
+                foreach ($submissions as $submission) {
+                    fputcsv($file, [
+                        $submission->id,
+                        $submission->full_name,
+                        $submission->email,
+                        $submission->mobile,
+                        $submission->score,
+                        $submission->total_questions,
+                        $submission->score_percentage . '%',
+                        $submission->created_at->format('Y-m-d H:i:s'),
+                    ]);
+                }
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

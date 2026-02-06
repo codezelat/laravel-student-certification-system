@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('images/sitc-fav-150x150.png') }}">
     <style>
         :root {
             --primary: #6366f1;
@@ -21,6 +22,18 @@
             --danger: #ef4444;
             --radius: 16px;
             --radius-sm: 10px;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: auto;
+            border-radius: var(--radius-sm);
         }
 
         * {
@@ -209,7 +222,9 @@
     <div class="container">
         <div class="card">
             <div class="header">
-                <div class="icon">🎓</div>
+                <div class="logo-container">
+                    <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC" class="logo-img">
+                </div>
                 <h1 class="title">{{ $form->title }}</h1>
                 @if($form->description)
                     <p class="subtitle">{{ $form->description }}</p>

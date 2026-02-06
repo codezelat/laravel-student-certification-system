@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('images/sitc-fav-150x150.png') }}">
     <style>
         :root {
             --primary: #6366f1;
@@ -22,6 +23,16 @@
             --secondary: #10b981;
             --radius: 16px;
             --radius-sm: 10px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-img {
+            height: 60px;
+            width: auto;
         }
 
         * {
@@ -230,6 +241,10 @@
     </div>
 
     <div class="container">
+        <div class="quiz-header">
+            <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC" class="logo-img">
+        </div>
+
         <div class="progress-text">
             <span>Question {{ $index + 1 }} of {{ $totalQuestions }}</span>
             <span>{{ $progress }}% Complete</span>

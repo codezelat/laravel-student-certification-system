@@ -120,6 +120,28 @@ class CertificateService
             $certifyY = $height / 2 - 60;
             $grayColor = imagecolorallocate($image, 100, 100, 100);
             imagettftext($image, $certifyFontSize, 0, (int)$certifyX, (int)$certifyY, $grayColor, $fontPath, $certifyText);
+            
+            // Add Logo to Certificate
+            $logoPath = public_path('images/sitc-logo.png');
+            if (file_exists($logoPath)) {
+                $logo = @imagecreatefrompng($logoPath);
+                if ($logo) {
+                    $logoWidth = imagesx($logo);
+                    $logoHeight = imagesy($logo);
+                    
+                    // Target width for logo (e.g., 150px)
+                    $targetLogoWidth = 150;
+                    $targetLogoHeight = ($logoHeight / $logoWidth) * $targetLogoWidth;
+                    
+                    // Position at bottom center
+                    $logoX = ($width - $targetLogoWidth) / 2;
+                    $logoY = $height - $borderWidth - $targetLogoHeight - 50;
+                    
+                    imagecopyresampled($image, $logo, (int)$logoX, (int)$logoY, 0, 0, (int)$targetLogoWidth, (int)$targetLogoHeight, $logoWidth, $logoHeight);
+                    imagedestroy($logo);
+                }
+            }
+
         }
 
         return $image;

@@ -6,6 +6,7 @@
     <title>Admin Login - {{ config('app.name') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="{{ asset('images/sitc-fav-150x150.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -44,16 +45,19 @@
         }
 
         .login-logo {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
-            border-radius: 16px;
+            width: auto;
+            height: 80px;
+            background: transparent;
+            box-shadow: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
             margin: 0 auto 1.5rem;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .login-logo img {
+            max-height: 100%;
+            max-width: 100%;
         }
 
         .login-title {
@@ -210,7 +214,9 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="login-logo">🎓</div>
+                <div class="login-logo">
+                    <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC Logo">
+                </div>
                 <h1 class="login-title">Welcome Back</h1>
                 <p class="login-subtitle">Sign in to manage your certifications</p>
             </div>
