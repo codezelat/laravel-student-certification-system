@@ -46,6 +46,10 @@ Route::prefix('admin')->middleware('admin.auth')->group(function () {
 
     // Export Route
     Route::get('/forms/{form}/export', [FormController::class, 'export'])->name('admin.forms.export');
+
+    // Certificate Designer Route
+    Route::get('/forms/{form}/design', [FormController::class, 'design'])->name('admin.forms.design');
+    Route::post('/forms/{form}/design', [FormController::class, 'saveDesign'])->name('admin.forms.save-design');
 });
 
 // Public Form Routes

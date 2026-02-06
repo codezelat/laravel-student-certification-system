@@ -28,7 +28,7 @@
                 <div>
                     <label class="block text-sm font-medium leading-6 text-gray-900">Question Text <span class="text-red-500">*</span></label>
                     <div class="mt-2">
-                        <textarea name="question_text" rows="2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>{{ old('question_text', $question->question_text) }}</textarea>
+                        <textarea name="question_text" rows="2" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required>{{ old('question_text', $question->question_text) }}</textarea>
                     </div>
                 </div>
 
@@ -39,7 +39,7 @@
                             <div class="flex items-center gap-3">
                                 <input type="hidden" name="answers[{{ $index }}][id]" value="{{ $answer->id }}">
                                 <input type="checkbox" name="correct_answers[]" value="{{ $index }}" {{ $answer->is_correct ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer">
-                                <input type="text" name="answers[{{ $index }}][text]" value="{{ $answer->answer_text }}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option" required>
+                                <input type="text" name="answers[{{ $index }}][text]" value="{{ $answer->answer_text }}" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option" required>
                                 
                                 {{-- Don't allow deleting the first two answers to enforce minimum 2 constraint simply --}}
                                 @if($index >= 2)
@@ -86,7 +86,7 @@ function addAnswer() {
     row.className = 'flex items-center gap-3';
     row.innerHTML = `
         <input type="checkbox" name="correct_answers[]" value="${currentMaxIndex}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer">
-        <input type="text" name="answers[${currentMaxIndex}][text]" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option" required>
+        <input type="text" name="answers[${currentMaxIndex}][text]" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option" required>
         <button type="button" class="text-gray-400 hover:text-red-500 p-1" onclick="removeAnswer(this)">
             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
         </button>

@@ -17,10 +17,12 @@ class Form extends Model
         'certificate_image',
         'orientation',
         'is_active',
+        'certificate_settings',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'certificate_settings' => 'array',
     ];
 
     protected static function boot()

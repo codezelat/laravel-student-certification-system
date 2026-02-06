@@ -171,4 +171,43 @@ class FormController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    /**
+     * Show the certificate designer.
+     */
+    public function design(Form $form)
+    {
+        return view('admin.forms.design', compact('form'));
+    }
+
+    /**
+     * Save certificate design settings.
+     */
+    public function saveDesign(Request $request, Form $form)
+    {
+        $validated = $request->validate([
+            'x' => 'nullable|integer',
+            'y' => 'nullable|integer',
+            'font_size' => 'required|integer|min:10|max:200',
+            'font_color' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
+            'font_weight' => 'nullable|in:normal,bold',
+            'font_style' => 'nullable|in:normal,italic',
+            'background_fit' => 'nullable|in:fill,cover,contain',
+        ]);
+
+        // Merge defaults if null, but actually we want to save exactly what is sent to maintain position
+        $form->certificate_settings = [
+            'x' => $request->x, // Allow null
+            'y' => $request->y, // Allow null
+            'font_size' => $request->font_size,
+            'font_color' => $request->font_color,
+            'font_weight' => $request->font_weight ?? 'bold', // Default to bold as before
+            'font_style' => $request->font_style ?? 'normal',
+            'background_fit' => $request->background_fit ?? 'fill',
+        ];
+        
+        $form->save();
+
+        return back()->with('success', 'Certificate design saved successfully!');
+    }
 }

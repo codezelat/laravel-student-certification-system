@@ -26,7 +26,7 @@
                     <input type="text" 
                            id="title" 
                            name="title" 
-                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" 
+                           class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" 
                            placeholder="e.g., JavaScript Fundamentals Quiz"
                            value="{{ old('title') }}"
                            required>
@@ -39,7 +39,7 @@
                     <textarea id="description" 
                               name="description" 
                               rows="3" 
-                              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" 
+                              class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" 
                               placeholder="Brief description of the questionnaire...">{{ old('description') }}</textarea>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                 <div>
                     <label for="orientation" class="block text-sm font-medium leading-6 text-gray-900">Orientation <span class="text-red-500">*</span></label>
                     <div class="mt-2">
-                        <select id="orientation" name="orientation" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" required>
+                        <select id="orientation" name="orientation" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" required>
                             <option value="horizontal" {{ old('orientation') == 'horizontal' ? 'selected' : '' }}>Horizontal (Landscape)</option>
                             <option value="vertical" {{ old('orientation') == 'vertical' ? 'selected' : '' }}>Vertical (Portrait)</option>
                         </select>

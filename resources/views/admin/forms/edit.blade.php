@@ -74,14 +74,14 @@
                     <div>
                         <label for="title" class="block text-sm font-medium leading-6 text-gray-900">Form Title</label>
                         <div class="mt-2">
-                            <input type="text" id="title" name="title" value="{{ old('title', $form->title) }}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" required>
+                            <input type="text" id="title" name="title" value="{{ old('title', $form->title) }}" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" required>
                         </div>
                     </div>
 
                     <div>
                         <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
                         <div class="mt-2">
-                            <textarea id="description" name="description" rows="2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">{{ old('description', $form->description) }}</textarea>
+                            <textarea id="description" name="description" rows="2" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">{{ old('description', $form->description) }}</textarea>
                         </div>
                     </div>
 
@@ -99,7 +99,7 @@
                         <div>
                             <label for="orientation" class="block text-sm font-medium leading-6 text-gray-900">Orientation</label>
                             <div class="mt-2">
-                                <select id="orientation" name="orientation" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                                <select id="orientation" name="orientation" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
                                     <option value="horizontal" {{ $form->orientation == 'horizontal' ? 'selected' : '' }}>Horizontal</option>
                                     <option value="vertical" {{ $form->orientation == 'vertical' ? 'selected' : '' }}>Vertical</option>
                                 </select>
@@ -203,7 +203,7 @@
                     <div>
                         <label class="block text-sm font-medium leading-6 text-gray-900">Question Text <span class="text-red-500">*</span></label>
                         <div class="mt-2">
-                            <textarea name="question_text" rows="2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter your question here..." required></textarea>
+                            <textarea name="question_text" rows="2" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Enter your question here..." required></textarea>
                         </div>
                     </div>
 
@@ -212,7 +212,7 @@
                         <div class="space-y-3" id="answersContainer">
                             <div class="flex items-center gap-3">
                                 <input type="checkbox" name="correct_answers[]" value="0" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer">
-                                <input type="text" name="answers[0][text]" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option 1" required>
+                                <input type="text" name="answers[0][text]" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option 1" required>
                                 <button type="button" class="text-gray-400 hover:text-red-500 invisible p-1">
                                     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
                                 </button>
@@ -249,7 +249,7 @@
                 <div class="p-6">
                     <label class="block text-xs font-medium text-gray-500 mb-2">Public Link</label>
                     <div class="flex shadow-sm rounded-md">
-                        <input type="text" value="{{ $form->share_url }}" readonly id="shareLink" class="block w-full min-w-0 rounded-none rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-xs sm:leading-6 bg-gray-50">
+                        <input type="text" value="{{ $form->share_url }}" readonly id="shareLink" class="block w-full min-w-0 rounded-none rounded-l-md border-0 py-1.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-xs sm:leading-6 bg-gray-50">
                         <button type="button" onclick="copyShareLink()" class="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-xs font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                             Copy
                         </button>
@@ -275,7 +275,16 @@
                         <dd class="mt-1 text-2xl font-bold tracking-tight text-gray-900">{{ $form->submissions->count() }}</dd>
                     </div>
                     <div class="sm:col-span-2 pt-4 border-t border-gray-100">
-                        <a href="{{ route('admin.forms.submissions', $form) }}" class="block w-full text-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">View Submissions</a>
+                        <div class="flex flex-col sm:flex-row sm:justify-end sm:items-center gap-3">
+                            <a href="{{ route('admin.forms.design', $form) }}"
+                               class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                Design Certificate
+                            </a>
+                            <a href="{{ route('admin.forms.submissions', $form) }}"
+                               class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                View Submissions
+                            </a>
+                        </div>
                     </div>
                  </dl>
             </div>
@@ -322,7 +331,7 @@ function addAnswer() {
     row.className = 'flex items-center gap-3';
     row.innerHTML = `
         <input type="checkbox" name="correct_answers[]" value="${answerCount}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer">
-        <input type="text" name="answers[${answerCount}][text]" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option ${answerCount + 1}" required>
+        <input type="text" name="answers[${answerCount}][text]" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option ${answerCount + 1}" required>
         <button type="button" class="text-gray-400 hover:text-red-500 p-1" onclick="removeAnswer(this)">
             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
         </button>
