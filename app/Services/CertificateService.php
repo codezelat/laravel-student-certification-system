@@ -21,13 +21,16 @@ class CertificateService
      */
     public function generate(Form $form, Submission $submission): string
     {
+        // High Quality Scale Factor
+        $scale = 3;
+
         // Determine dimensions based on orientation
         if ($form->orientation === 'horizontal') {
-            $width = self::HORIZONTAL_WIDTH;
-            $height = self::HORIZONTAL_HEIGHT;
+            $width = self::HORIZONTAL_WIDTH * $scale;
+            $height = self::HORIZONTAL_HEIGHT * $scale;
         } else {
-            $width = self::VERTICAL_WIDTH;
-            $height = self::VERTICAL_HEIGHT;
+            $width = self::VERTICAL_WIDTH * $scale;
+            $height = self::VERTICAL_HEIGHT * $scale;
         }
 
         // Load the background image or create a default one
@@ -136,10 +139,16 @@ class CertificateService
      */
     private function addNameToImage($image, string $name, int $width, int $height, Form $form): void
     {
-        // Font Path will be determined later based on settings
-        // $fontPath = $this->getFontPath(); // Removed
-
         $settings = $form->certificate_settings ?? [];
+
+        // Determine Scale Factor
+        $standardWidth = ($form->orientation === 'horizontal' ? self::HORIZONTAL_WIDTH : self::VERTICAL_WIDTH);
+        $scale = $width / $standardWidth;
+
+        // Font Settings
+        $fontWeight = $settings['font_weight'] ?? 'bold';
+        $fontStyle = $settings['font_style'] ?? 'normal';
+        $fontPath = $this->getFontPath($fontWeight, $fontStyle);
 
         // Font Color
         $hexColor = $settings['font_color'] ?? '#003366';
@@ -149,42 +158,124 @@ class CertificateService
             $textColor = imagecolorallocate($image, 0, 51, 102);
         }
 
-        // Font Size
-        $baseFontSize = ($width > $height) ? 42 : 32;
-        $fontSize = isset($settings['font_size']) ? (int)$settings['font_size'] : $baseFontSize;
+        // Settings (Scaled)
+        $msgFontSize = isset($settings['font_size']) ? (int)$settings['font_size'] : 42;
+        $originalFontSize = $msgFontSize * $scale;
         
-        // Dynamic Scaling if no custom settings used (legacy behavior), but if user set size, respect it.
-        if (!isset($settings['font_size'])) {
-             $fontSize = min($baseFontSize, $baseFontSize * (20 / max(strlen($name), 10)));
-             $fontSize = max($fontSize, 20);
-        }
-
-        // Coordinates
-        $x = $settings['x'] ?? null;
-        $y = $settings['y'] ?? null;
-
-        // Font Settings
-        $fontWeight = $settings['font_weight'] ?? 'bold';
-        $fontStyle = $settings['font_style'] ?? 'normal';
+        $x = isset($settings['x']) ? $settings['x'] * $scale : null;
+        $y = isset($settings['y']) ? $settings['y'] * $scale : null;
+        $maxWidth = isset($settings['max_width']) ? $settings['max_width'] * $scale : null;
         
-        $fontPath = $this->getFontPath($fontWeight, $fontStyle);
+        $maxLines = $settings['max_lines'] ?? 1;
+        $textAlign = $settings['text_align'] ?? 'center';
 
         if ($fontPath) {
-            $bbox = imagettfbbox($fontSize, 0, $fontPath, $name);
-            $textWidth = $bbox[2] - $bbox[0];
-            $textHeight = $bbox[1] - $bbox[7];
-
-            // If X is not set, center horizontally
+            
+            // Positioning Default
             if ($x === null) {
-                 $x = ($width - $textWidth) / 2;
+                // Use a temporary calculation for default centering
+                $bbox = imagettfbbox($originalFontSize, 0, $fontPath, $name);
+                $initialTextWidth = $bbox[2] - $bbox[0];
+                $x = ($width - ($maxWidth ?? $initialTextWidth)) / 2;
+            }
+            if ($y === null) $y = $height / 2;
+
+            // --- Auto-Scaling & Wrapping Loop ---
+            $currentFontSize = $originalFontSize;
+            $finalLines = [$name]; // Fallback
+            
+            // Iterate to find best fit
+            while ($currentFontSize >= 10) {
+                // Try to wrap text into lines with current font size
+                $words = explode(' ', $name);
+                $lines = [];
+                $currentLine = '';
+
+                foreach ($words as $word) {
+                    $testLine = $currentLine === '' ? $word : $currentLine . ' ' . $word;
+                    
+                    // Measure
+                    $box = imagettfbbox($currentFontSize, 0, $fontPath, $testLine);
+                    $lineWidth = $box[2] - $box[0];
+                    
+                    // If we have a max width and this exceeds it, wrap
+                    if ($maxWidth && $lineWidth > $maxWidth && $currentLine !== '') {
+                        $lines[] = $currentLine;
+                        $currentLine = $word;
+                    } else {
+                        $currentLine = $testLine;
+                    }
+                }
+                if ($currentLine !== '') $lines[] = $currentLine;
+                
+                // Check constraints
+                $fits = true;
+
+                // 1. Line Count
+                if (count($lines) > $maxLines) {
+                    $fits = false;
+                }
+                
+                // 2. Max Width Check (ensure no single line exceeds width)
+                if ($fits && $maxWidth) {
+                    foreach ($lines as $line) {
+                         $box = imagettfbbox($currentFontSize, 0, $fontPath, $line);
+                         if (($box[2] - $box[0]) > $maxWidth) {
+                             $fits = false; break;
+                         }
+                    }
+                }
+                
+                if ($fits) {
+                    $finalLines = $lines;
+                    break;
+                }
+
+                $currentFontSize -= 2; // Reduce and retry
             }
             
-            // If Y is not set, center vertically
-            if ($y === null) {
-                 $y = ($height / 2) + ($textHeight / 2);
-            }
+            // --- Drawing ---
+            // Use 1.2 line height ratio to match CSS roughly
+            $lineHeight = $currentFontSize * 1.2; 
+            $totalBlockHeight = count($finalLines) * $lineHeight;
+            
+            // Vertical Alignment
+            $verticalAlign = $settings['vertical_align'] ?? 'top';
+            
+            // Calculate Top Y of the text block based on anchor $y
+            $topY = $y;
 
-            imagettftext($image, $fontSize, 0, (int)$x, (int)$y, $textColor, $fontPath, $name);
+            if ($verticalAlign === 'middle') {
+                // $y is the vertical center anchor
+                $topY = $y - ($totalBlockHeight / 2);
+            } elseif ($verticalAlign === 'bottom') {
+                // $y is the bottom anchor
+                $topY = $y - $totalBlockHeight;
+            }
+            
+            // Start draw Y calculation (Baseline of first line)
+            // Baseline is roughly Top + (FontSize * 0.8) to account for ascent
+            $startDrawY = $topY + ($currentFontSize * 0.8);
+
+            foreach ($finalLines as $i => $line) {
+                $box = imagettfbbox($currentFontSize, 0, $fontPath, $line);
+                $w = $box[2] - $box[0];
+                
+                // Calc X Alignment
+                $drawX = $x;
+                if ($maxWidth) {
+                    if ($textAlign === 'center') $drawX = $x + ($maxWidth - $w) / 2;
+                    elseif ($textAlign === 'right') $drawX = $x + $maxWidth - $w;
+                    // Left is default ($x)
+                } else {
+                    // Legacy behavior constraint
+                    if ($textAlign === 'center') $drawX = $x - ($w / 2);
+                }
+                
+                $drawY = $startDrawY + ($i * $lineHeight);
+
+                imagettftext($image, $currentFontSize, 0, (int)$drawX, (int)$drawY, $textColor, $fontPath, $line);
+            }
         } else {
             // Fallback to built-in font
             $textWidth = imagefontwidth(5) * strlen($name);

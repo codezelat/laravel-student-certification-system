@@ -50,6 +50,7 @@ Route::prefix('admin')->middleware('admin.auth')->group(function () {
     // Certificate Designer Route
     Route::get('/forms/{form}/design', [FormController::class, 'design'])->name('admin.forms.design');
     Route::post('/forms/{form}/design', [FormController::class, 'saveDesign'])->name('admin.forms.save-design');
+    Route::get('/forms/{form}/preview', [FormController::class, 'preview'])->name('admin.forms.preview');
 });
 
 // Public Form Routes
@@ -59,3 +60,4 @@ Route::get('/form/{slug}/question/{index}', [PublicFormController::class, 'quest
 Route::post('/form/{slug}/answer', [PublicFormController::class, 'submitAnswer'])->name('public.answer');
 Route::get('/form/{slug}/result', [PublicFormController::class, 'result'])->name('public.result');
 Route::get('/form/{slug}/certificate/download', [PublicFormController::class, 'downloadCertificate'])->name('public.certificate.download');
+Route::get('/form/{slug}/certificate/view', [PublicFormController::class, 'viewCertificate'])->name('public.certificate.view');

@@ -15,7 +15,7 @@ class FormController extends Controller
      */
     public function index()
     {
-        $forms = Form::withCount(['questions', 'submissions'])->latest()->paginate(10);
+        $forms = Form::withCount(['questions', 'submissions'])->latest()->paginate(15);
         return view('admin.forms.index', compact('forms'));
     }
 
@@ -193,6 +193,10 @@ class FormController extends Controller
             'font_weight' => 'nullable|in:normal,bold',
             'font_style' => 'nullable|in:normal,italic',
             'background_fit' => 'nullable|in:fill,cover,contain',
+            'max_width' => 'nullable|integer|min:50|max:2000',
+            'text_align' => 'nullable|in:left,center,right',
+            'vertical_align' => 'nullable|in:top,middle,bottom',
+            'max_lines' => 'nullable|integer|min:1|max:5',
         ]);
 
         // Merge defaults if null, but actually we want to save exactly what is sent to maintain position
@@ -204,10 +208,29 @@ class FormController extends Controller
             'font_weight' => $request->font_weight ?? 'bold', // Default to bold as before
             'font_style' => $request->font_style ?? 'normal',
             'background_fit' => $request->background_fit ?? 'fill',
+            'max_width' => $request->max_width ?? 800,
+            'text_align' => $request->text_align ?? 'center',
+            'vertical_align' => $request->vertical_align ?? 'top', // Added
+            'max_lines' => $request->max_lines ?? 1,
         ];
         
         $form->save();
 
         return back()->with('success', 'Certificate design saved successfully!');
+    }
+
+    /**
+     * Generate a preview of the certificate.
+     */
+    public function preview(Request $request, Form $form, \App\Services\CertificateService $certificateService)
+    {
+        // Mock a submission for preview
+        $submission = new \App\Models\Submission();
+        $submission->id = 0;
+        $submission->full_name = $request->input('name', "Sample Participant Name");
+        
+        $path = $certificateService->generate($form, $submission);
+        
+        return response()->file($path)->deleteFileAfterSend();
     }
 }

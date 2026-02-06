@@ -44,7 +44,9 @@ class PublicFormController extends Controller
         $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'mobile' => 'required|string|max:20',
+            'mobile' => ['required', 'string', 'regex:/^(\+94|0)?\s?7[0-9]{1}\s?[0-9]{3}\s?[0-9]{4}$/'],
+        ], [
+            'mobile.regex' => 'Please enter a valid Sri Lankan mobile number (e.g., 077 123 4567 or +94 77 123 4567).',
         ]);
 
         $submission = Submission::create([
@@ -166,20 +168,38 @@ class PublicFormController extends Controller
     /**
      * Download certificate.
      */
-    public function downloadCertificate($slug)
+    public function downloadCertificate($slug, \App\Services\CertificateService $certificateService)
     {
         $form = Form::where('slug', $slug)->firstOrFail();
-
+        
         $submissionId = session('submission_id');
         if (!$submissionId) {
             return redirect()->route('public.show', $slug);
         }
-
+        
         $submission = Submission::findOrFail($submissionId);
+        
+        $path = $certificateService->generate($form, $submission);
+        
+        return response()->download($path, 'Certificate.jpg');
+    }
 
-        $certificateService = new CertificateService();
-        $imagePath = $certificateService->generate($form, $submission);
-
-        return response()->download($imagePath, 'certificate-' . $submission->id . '.png')->deleteFileAfterSend(true);
+    /**
+     * View certificate image inline (for result page preview).
+     */
+    public function viewCertificate($slug, \App\Services\CertificateService $certificateService)
+    {
+        $form = Form::where('slug', $slug)->firstOrFail();
+        
+        $submissionId = session('submission_id');
+        if (!$submissionId) {
+            abort(403);
+        }
+        
+        $submission = Submission::findOrFail($submissionId);
+        
+        $path = $certificateService->generate($form, $submission);
+        
+        return response()->file($path);
     }
 }

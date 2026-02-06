@@ -20,7 +20,7 @@ class DashboardController extends Controller
         ];
         
         $recentForms = Form::latest()->take(5)->get();
-        $recentSubmissions = Submission::with('form')->latest()->take(10)->get();
+        $recentSubmissions = Submission::with('form')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('stats', 'recentForms', 'recentSubmissions'));
     }
