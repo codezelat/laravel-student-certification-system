@@ -292,53 +292,46 @@ class CertificateService
      */
     private function getFontPath($weight = 'bold', $style = 'normal'): ?string
     {
-        $families = ['Georgia', 'Times New Roman', 'Arial', 'DejaVuSerif', 'LiberationSerif'];
-        $basePaths = [
-            '/System/Library/Fonts/Supplemental/',
-            '/Library/Fonts/',
-            '/usr/share/fonts/truetype/dejavu/',
-            '/usr/share/fonts/truetype/liberation/',
-            storage_path('app/fonts/'),
-        ];
-
-        // Construct suffix based on style
-        // E.g. " Bold", " Italic", " Bold Italic"
-        $suffixes = [];
-        
-        if ($weight === 'bold' && $style === 'italic') {
-            $suffixes[] = ' Bold Italic';
-            $suffixes[] = 'BoldItalic';
-            $suffixes[] = '-BoldItalic';
-        } elseif ($weight === 'bold') {
-            $suffixes[] = ' Bold';
-            $suffixes[] = 'Bold';
-            $suffixes[] = '-Bold';
-        } elseif ($style === 'italic') {
-            $suffixes[] = ' Italic';
-            $suffixes[] = 'Italic';
-            $suffixes[] = '-Italic';
-        } else {
-            $suffixes[] = '';
-            $suffixes[] = ' Regular';
-            $suffixes[] = '-Regular';
+        // 1. Check for specific font file in storage/app/fonts/
+        // You should upload a .ttf file to storage/app/fonts/certificate-font.ttf
+        $customFontPath = storage_path('app/fonts/certificate-font.ttf');
+        if (file_exists($customFontPath)) {
+            return $customFontPath;
         }
+
+        // 2. Check for other common fonts in storage/app/fonts/
+        $families = ['Roboto', 'OpenSans', 'Lato', 'Arial']; 
+        $suffixes = ['-Bold', '-Regular', 'Bold', 'Regular', ''];
 
         foreach ($families as $family) {
             foreach ($suffixes as $suffix) {
                 $filename = $family . $suffix . '.ttf';
-                
-                foreach ($basePaths as $basePath) {
-                    $fullPath = $basePath . $filename;
-                    if (file_exists($fullPath)) {
-                        return $fullPath;
-                    }
+                $localPath = storage_path('app/fonts/' . $filename);
+                if (file_exists($localPath)) {
+                    return $localPath;
                 }
             }
         }
 
-        // Final fallback to the specific file if it exists (legacy support)
-        if (file_exists(storage_path('app/fonts/certificate-font.ttf'))) {
-            return storage_path('app/fonts/certificate-font.ttf');
+        // 3. Fallback Layout: if no font found, return null to trigger built-in font (which is tiny)
+        // OR better: try to find *any* .ttf file in the fonts directory
+        $files = glob(storage_path('app/fonts/*.ttf'));
+        if ($files && count($files) > 0) {
+            return $files[0];
+        }
+
+        // 4. System paths (Least reliable on shared hosting)
+        $systemPaths = [
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+            '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+            '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
+            '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf',
+        ];
+
+        foreach ($systemPaths as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
         }
 
         return null;
