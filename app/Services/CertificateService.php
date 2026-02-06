@@ -21,9 +21,9 @@ class CertificateService
      * 
      * @param Form $form
      * @param Submission $submission
-     * @param int $scale Scale factor (1 = preview/fast, 3 = high quality download)
+     * @param int $scale Scale factor (1 = preview/fast, 2 = download default)
      */
-    public function generate(Form $form, Submission $submission, int $scale = 3): string
+    public function generate(Form $form, Submission $submission, int $scale = 2): string
     {
         // Determine dimensions based on orientation
         if ($form->orientation === 'horizontal') {
