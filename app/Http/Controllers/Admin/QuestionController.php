@@ -43,6 +43,14 @@ class QuestionController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Form $form, Question $question)
+    {
+        return view('admin.questions.edit', compact('form', 'question'));
+    }
+
+    /**
      * Update a question.
      */
     public function update(Request $request, Form $form, Question $question)
@@ -51,6 +59,7 @@ class QuestionController extends Controller
             'question_text' => 'required|string',
             'answers' => 'required|array|min:2',
             'answers.*.text' => 'required|string',
+            'answers.*.id' => 'nullable|exists:answers,id',
             'correct_answers' => 'required|array|min:1',
         ]);
 
@@ -58,17 +67,49 @@ class QuestionController extends Controller
             'question_text' => $request->question_text,
         ]);
 
-        // Delete old answers and create new ones
-        $question->answers()->delete();
-
-        $correctAnswers = $request->correct_answers ?? [];
+        $incomingIds = [];
+        $correctAnswersIndices = $request->correct_answers ?? [];
 
         foreach ($request->answers as $index => $answerData) {
-            $question->answers()->create([
-                'answer_text' => $answerData['text'],
-                'is_correct' => in_array($index, $correctAnswers),
-                'order' => $index,
-            ]);
+            $isCorrect = in_array($index, $correctAnswersIndices);
+            
+            if (isset($answerData['id'])) {
+                // Update existing
+                $answer = Answer::find($answerData['id']);
+                if ($answer) {
+                    $answer->update([
+                        'answer_text' => $answerData['text'],
+                        'is_correct' => $isCorrect,
+                        'order' => $index,
+                    ]);
+                    $incomingIds[] = $answer->id;
+                }
+            } else {
+                // Create new
+                $newAnswer = $question->answers()->create([
+                    'answer_text' => $answerData['text'],
+                    'is_correct' => $isCorrect,
+                    'order' => $index,
+                ]);
+                $incomingIds[] = $newAnswer->id;
+            }
+        }
+
+        // Handle deletions safely
+        $existingIds = $question->answers()->pluck('id')->toArray();
+        $toDelete = array_diff($existingIds, $incomingIds);
+
+        foreach ($toDelete as $id) {
+            $answer = Answer::find($id);
+            // Check if used in submissions
+            if (\App\Models\SubmissionAnswer::where('answer_id', $id)->exists()) {
+                // If used, we arguably shouldn't delete it. 
+                // But since we don't have soft deletes, 
+                // we will keep it but maybe we should ideally mark it inactive.
+                // For this MVP/Lite scope, let's return an error to be safe.
+                return back()->with('error', "Cannot delete option '{$answer->answer_text}' because it has explicitly been chosen by students in past submissions.");
+            }
+            $answer->delete();
         }
 
         return back()->with('success', 'Question updated successfully!');

@@ -131,10 +131,13 @@
                                     <span class="flex items-center justify-center h-6 w-6 rounded-full bg-primary-100 text-primary-600 text-xs font-bold">Q{{ $index + 1 }}</span>
                                     <span class="text-xs font-medium text-gray-400">MCQ</span>
                                 </div>
-                                <form action="{{ route('admin.questions.destroy', [$form, $question]) }}" method="POST" onsubmit="return confirm('Delete this question?');">
+                                <form action="{{ route('admin.questions.destroy', [$form, $question]) }}" method="POST" id="deleteQuestion{{ $question->id }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete Question">
+                                    <button type="button" 
+                                            onclick="window.dispatchEvent(new CustomEvent('confirm-modal', { detail: { title: 'Delete Question', message: 'Are you sure you want to delete this question?', confirmAction: 'deleteQuestion{{ $question->id }}', mode: 'delete' } }))"
+                                            class="text-gray-400 hover:text-red-500 transition-colors" 
+                                            title="Delete Question">
                                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                                         </svg>
@@ -207,13 +210,7 @@
                                     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
                                 </button>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <input type="checkbox" name="correct_answers[]" value="1" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer">
-                                <input type="text" name="answers[1][text]" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Answer option 2" required>
-                                <button type="button" class="text-gray-400 hover:text-red-500 invisible p-1">
-                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                                </button>
-                            </div>
+
                         </div>
                         <button type="button" onclick="addAnswer()" class="mt-4 inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-500">
                             <svg class="mr-1.5 h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -293,10 +290,12 @@
         <!-- Danger Zone -->
         <div class="bg-red-50 overflow-hidden shadow-sm rounded-xl border border-red-100">
              <div class="p-6 text-center">
-                <form action="{{ route('admin.forms.destroy', $form) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this form? This cannot be undone.');">
+                <form action="{{ route('admin.forms.destroy', $form) }}" method="POST" id="deleteForm{{ $form->id }}">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-500">
+                    <button type="button" 
+                            onclick="window.dispatchEvent(new CustomEvent('confirm-modal', { detail: { title: 'Delete Form', message: 'Are you sure you want to delete this form? This action cannot be undone.', confirmAction: 'deleteForm{{ $form->id }}', mode: 'delete' } }))"
+                            class="text-sm font-medium text-red-600 hover:text-red-500">
                         Delete this form
                     </button>
                 </form>
@@ -333,7 +332,9 @@ function copyShareLink() {
     const input = document.getElementById('shareLink');
     input.select();
     navigator.clipboard.writeText(input.value);
-    alert('Link copied!');
+    window.dispatchEvent(new CustomEvent('notify', { 
+        detail: { message: 'Link copied successfully!', type: 'success' } 
+    }));
 }
 </script>
 @endpush

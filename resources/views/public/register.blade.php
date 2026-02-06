@@ -37,7 +37,7 @@
         }
     </script>
 </head>
-<body class="h-full flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+<body class="min-h-screen flex flex-col items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
     
     <!-- Background decoration -->
     <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
@@ -47,7 +47,7 @@
 
     <div class="max-w-lg w-full space-y-8 relative z-10">
         <div class="text-center">
-             <div class="mx-auto h-20 w-auto flex items-center justify-center mb-6">
+            <div class="mx-auto h-12 w-auto flex items-center justify-center mb-8">
                 <img src="{{ asset('images/sitc-logo.png') }}" alt="SITC Logo" class="h-full object-contain drop-shadow-sm">
             </div>
             <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">

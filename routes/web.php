@@ -39,6 +39,7 @@ Route::prefix('admin')->middleware('admin.auth')->group(function () {
     
     // Question Routes
     Route::post('/forms/{form}/questions', [QuestionController::class, 'store'])->name('admin.questions.store');
+    Route::get('/forms/{form}/questions/{question}/edit', [QuestionController::class, 'edit'])->name('admin.questions.edit');
     Route::put('/forms/{form}/questions/{question}', [QuestionController::class, 'update'])->name('admin.questions.update');
     Route::delete('/forms/{form}/questions/{question}', [QuestionController::class, 'destroy'])->name('admin.questions.destroy');
     Route::post('/forms/{form}/questions/reorder', [QuestionController::class, 'reorder'])->name('admin.questions.reorder');

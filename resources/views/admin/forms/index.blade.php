@@ -128,8 +128,9 @@
 <script>
 function copyLink(url) {
     navigator.clipboard.writeText(url).then(function() {
-        // You could convert this to a toast notification
-        alert('Link copied to clipboard!'); 
+        window.dispatchEvent(new CustomEvent('notify', { 
+            detail: { message: 'Link copied to clipboard!', type: 'success' } 
+        }));
     });
 }
 </script>
