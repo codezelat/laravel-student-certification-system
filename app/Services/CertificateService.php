@@ -291,23 +291,61 @@ class CertificateService
 
     /**
      * Get a TrueType font path based on weight and style.
+     * 
+     * Supports font variants:
+     * - certificate-font-bold.ttf, certificate-font-regular.ttf
+     * - certificate-font-italic.ttf, certificate-font-bold-italic.ttf
+     * Or falls back to single: certificate-font.ttf
      */
     private function getFontPath($weight = 'bold', $style = 'normal'): ?string
     {
-        $fontName = 'Roboto-Regular.ttf';
-        if ($weight === 'bold') {
-            $fontName = 'Roboto-Bold.ttf';
+        $fontsDir = storage_path('app/fonts');
+        
+        // 1. FIRST: Check for specific font variant (e.g., certificate-font-bold-italic.ttf)
+        $variantSuffix = '';
+        if ($weight === 'bold' && $style === 'italic') {
+            $variantSuffix = '-bold-italic';
+        } elseif ($weight === 'bold') {
+            $variantSuffix = '-bold';
+        } elseif ($style === 'italic') {
+            $variantSuffix = '-italic';
+        } else {
+            $variantSuffix = '-regular';
+        }
+        
+        // Check certificate font with variant
+        $variantFont = $fontsDir . '/certificate-font' . $variantSuffix . '.ttf';
+        if (file_exists($variantFont)) {
+            return $variantFont;
+        }
+        
+        // 2. Fallback to single bundled certificate font (works on live servers without internet)
+        $bundledFont = $fontsDir . '/certificate-font.ttf';
+        if (file_exists($bundledFont)) {
+            return $bundledFont;
         }
 
-        $localPath = storage_path('app/fonts/' . $fontName);
+        // 3. Try Roboto fonts by weight/style
+        $robotoName = 'Roboto-';
+        if ($weight === 'bold' && $style === 'italic') {
+            $robotoName .= 'BoldItalic.ttf';
+        } elseif ($weight === 'bold') {
+            $robotoName .= 'Bold.ttf';
+        } elseif ($style === 'italic') {
+            $robotoName .= 'Italic.ttf';
+        } else {
+            $robotoName .= 'Regular.ttf';
+        }
 
-        // 1. Check if font exists locally
+        $localPath = $fontsDir . '/' . $robotoName;
+
+        // 4. Check if Roboto font exists locally
         if (file_exists($localPath)) {
             return $localPath;
         }
 
-        // 2. Download from Google Fonts (GitHub mirror for direct raw file access)
-        // Using Apache OpenSans or Roboto from reliable source
+        // 5. Try to download from Google Fonts (GitHub mirror for direct raw file access)
+        // NOTE: This may fail on live servers with network restrictions
         $url = '';
         if ($weight === 'bold') {
             $url = 'https://github.com/google/fonts/raw/main/apache/roboto/Roboto-Bold.ttf';
@@ -322,16 +360,29 @@ class CertificateService
             }
 
             // Download file
-            $content = file_get_contents($url);
-            if ($content) {
+            $content = @file_get_contents($url);
+            if ($content && strlen($content) > 1000) { // Basic validation that we got a real font file
                 file_put_contents($localPath, $content);
                 return $localPath;
             }
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error('Failed to download Google Font: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::warning('Failed to download Google Font: ' . $e->getMessage());
         }
 
-        // 3. Fallback to existing logic (system paths) if download fails
+        // 6. Fallback: search for any existing .ttf file in fonts directory
+        if (is_dir($fontsDir)) {
+            $files = scandir($fontsDir);
+            foreach ($files as $file) {
+                if (pathinfo($file, PATHINFO_EXTENSION) === 'ttf') {
+                    $path = $fontsDir . '/' . $file;
+                    if (file_exists($path)) {
+                        return $path;
+                    }
+                }
+            }
+        }
+
+        // 7. Last resort: check common font families
         $families = ['Roboto', 'OpenSans', 'Lato', 'Arial']; 
         $suffixes = ['-Bold', '-Regular', 'Bold', 'Regular', ''];
 
@@ -345,6 +396,7 @@ class CertificateService
             }
         }
 
+        \Illuminate\Support\Facades\Log::error('CertificateService: No font file found! Text will render with fallback (tiny) font.');
         return null;
     }
 

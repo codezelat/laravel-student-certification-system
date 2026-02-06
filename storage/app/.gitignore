@@ -1,4 +1,6 @@
 *
+!fonts/
+!fonts/*.ttf
 !private/
 !public/
 !.gitignore
