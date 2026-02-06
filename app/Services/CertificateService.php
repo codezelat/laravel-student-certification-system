@@ -170,120 +170,122 @@ class CertificateService
         $textAlign = $settings['text_align'] ?? 'center';
 
         if ($fontPath) {
-            
-            // Positioning Default
-            if ($x === null) {
-                // Use a temporary calculation for default centering
-                $bbox = imagettfbbox($originalFontSize, 0, $fontPath, $name);
-                $initialTextWidth = $bbox[2] - $bbox[0];
-                $x = ($width - ($maxWidth ?? $initialTextWidth)) / 2;
-            }
-            if ($y === null) $y = $height / 2;
+            try {
+                // Positioning Default
+                if ($x === null) {
+                    // Use a temporary calculation for default centering
+                    $bbox = imagettfbbox($originalFontSize, 0, $fontPath, $name);
+                    $initialTextWidth = $bbox[2] - $bbox[0];
+                    $x = ($width - ($maxWidth ?? $initialTextWidth)) / 2;
+                }
+                if ($y === null) $y = $height / 2;
 
-            // --- Auto-Scaling & Wrapping Loop ---
-            $currentFontSize = $originalFontSize;
-            $finalLines = [$name]; // Fallback
-            
-            // Iterate to find best fit
-            while ($currentFontSize >= 10) {
-                // Try to wrap text into lines with current font size
-                $words = explode(' ', $name);
-                $lines = [];
-                $currentLine = '';
+                // --- Auto-Scaling & Wrapping Loop ---
+                $currentFontSize = $originalFontSize;
+                $finalLines = [$name]; // Fallback
+                
+                // Iterate to find best fit
+                while ($currentFontSize >= 10) {
+                    // Try to wrap text into lines with current font size
+                    $words = explode(' ', $name);
+                    $lines = [];
+                    $currentLine = '';
 
-                foreach ($words as $word) {
-                    $testLine = $currentLine === '' ? $word : $currentLine . ' ' . $word;
+                    foreach ($words as $word) {
+                        $testLine = $currentLine === '' ? $word : $currentLine . ' ' . $word;
+                        
+                        // Measure
+                        $box = imagettfbbox($currentFontSize, 0, $fontPath, $testLine);
+                        $lineWidth = $box[2] - $box[0];
+                        
+                        // If we have a max width and this exceeds it, wrap
+                        if ($maxWidth && $lineWidth > $maxWidth && $currentLine !== '') {
+                            $lines[] = $currentLine;
+                            $currentLine = $word;
+                        } else {
+                            $currentLine = $testLine;
+                        }
+                    }
+                    if ($currentLine !== '') $lines[] = $currentLine;
                     
-                    // Measure
-                    $box = imagettfbbox($currentFontSize, 0, $fontPath, $testLine);
-                    $lineWidth = $box[2] - $box[0];
+                    // Check constraints
+                    $fits = true;
+
+                    // 1. Line Count
+                    if (count($lines) > $maxLines) {
+                        $fits = false;
+                    }
                     
-                    // If we have a max width and this exceeds it, wrap
-                    if ($maxWidth && $lineWidth > $maxWidth && $currentLine !== '') {
-                        $lines[] = $currentLine;
-                        $currentLine = $word;
+                    // 2. Max Width Check (ensure no single line exceeds width)
+                    if ($fits && $maxWidth) {
+                        foreach ($lines as $line) {
+                             $box = imagettfbbox($currentFontSize, 0, $fontPath, $line);
+                             if (($box[2] - $box[0]) > $maxWidth) {
+                                 $fits = false; break;
+                             }
+                        }
+                    }
+                    
+                    if ($fits) {
+                        $finalLines = $lines;
+                        break;
+                    }
+
+                    $currentFontSize -= 2; // Reduce and retry
+                }
+                
+                // --- Drawing ---
+                // Use 1.2 line height ratio to match CSS roughly
+                $lineHeight = $currentFontSize * 1.2; 
+                $totalBlockHeight = count($finalLines) * $lineHeight;
+                
+                // Vertical Alignment
+                $verticalAlign = $settings['vertical_align'] ?? 'top';
+                
+                // Calculate Top Y of the text block based on anchor $y
+                $topY = $y;
+
+                if ($verticalAlign === 'middle') {
+                    // $y is the vertical center anchor
+                    $topY = $y - ($totalBlockHeight / 2);
+                } elseif ($verticalAlign === 'bottom') {
+                    // $y is the bottom anchor
+                    $topY = $y - $totalBlockHeight;
+                }
+                
+                // Start draw Y calculation (Baseline of first line)
+                // Baseline is roughly Top + (FontSize * 0.8) to account for ascent
+                $startDrawY = $topY + ($currentFontSize * 0.8);
+
+                foreach ($finalLines as $i => $line) {
+                    $box = imagettfbbox($currentFontSize, 0, $fontPath, $line);
+                    $w = $box[2] - $box[0];
+                    
+                    // Calc X Alignment
+                    $drawX = $x;
+                    if ($maxWidth) {
+                        if ($textAlign === 'center') $drawX = $x + ($maxWidth - $w) / 2;
+                        elseif ($textAlign === 'right') $drawX = $x + $maxWidth - $w;
+                        // Left is default ($x)
                     } else {
-                        $currentLine = $testLine;
+                        // Legacy behavior constraint
+                        if ($textAlign === 'center') $drawX = $x - ($w / 2);
                     }
-                }
-                if ($currentLine !== '') $lines[] = $currentLine;
-                
-                // Check constraints
-                $fits = true;
+                    
+                    $drawY = $startDrawY + ($i * $lineHeight);
 
-                // 1. Line Count
-                if (count($lines) > $maxLines) {
-                    $fits = false;
+                    imagettftext($image, $currentFontSize, 0, (int)$drawX, (int)$drawY, $textColor, $fontPath, $line);
                 }
+            } catch (\Throwable $e) {
+                // If TTF fails (e.g. font not found or GD error), log it and fallback
+                \Illuminate\Support\Facades\Log::error('Certificate Font Error: ' . $e->getMessage());
                 
-                // 2. Max Width Check (ensure no single line exceeds width)
-                if ($fits && $maxWidth) {
-                    foreach ($lines as $line) {
-                         $box = imagettfbbox($currentFontSize, 0, $fontPath, $line);
-                         if (($box[2] - $box[0]) > $maxWidth) {
-                             $fits = false; break;
-                         }
-                    }
-                }
-                
-                if ($fits) {
-                    $finalLines = $lines;
-                    break;
-                }
-
-                $currentFontSize -= 2; // Reduce and retry
-            }
-            
-            // --- Drawing ---
-            // Use 1.2 line height ratio to match CSS roughly
-            $lineHeight = $currentFontSize * 1.2; 
-            $totalBlockHeight = count($finalLines) * $lineHeight;
-            
-            // Vertical Alignment
-            $verticalAlign = $settings['vertical_align'] ?? 'top';
-            
-            // Calculate Top Y of the text block based on anchor $y
-            $topY = $y;
-
-            if ($verticalAlign === 'middle') {
-                // $y is the vertical center anchor
-                $topY = $y - ($totalBlockHeight / 2);
-            } elseif ($verticalAlign === 'bottom') {
-                // $y is the bottom anchor
-                $topY = $y - $totalBlockHeight;
-            }
-            
-            // Start draw Y calculation (Baseline of first line)
-            // Baseline is roughly Top + (FontSize * 0.8) to account for ascent
-            $startDrawY = $topY + ($currentFontSize * 0.8);
-
-            foreach ($finalLines as $i => $line) {
-                $box = imagettfbbox($currentFontSize, 0, $fontPath, $line);
-                $w = $box[2] - $box[0];
-                
-                // Calc X Alignment
-                $drawX = $x;
-                if ($maxWidth) {
-                    if ($textAlign === 'center') $drawX = $x + ($maxWidth - $w) / 2;
-                    elseif ($textAlign === 'right') $drawX = $x + $maxWidth - $w;
-                    // Left is default ($x)
-                } else {
-                    // Legacy behavior constraint
-                    if ($textAlign === 'center') $drawX = $x - ($w / 2);
-                }
-                
-                $drawY = $startDrawY + ($i * $lineHeight);
-
-                imagettftext($image, $currentFontSize, 0, (int)$drawX, (int)$drawY, $textColor, $fontPath, $line);
+                // Fallback to built-in font
+                $this->useFallbackFont($image, $name, $width, $height, $x, $y, $textColor);
             }
         } else {
             // Fallback to built-in font
-            $textWidth = imagefontwidth(5) * strlen($name);
-            
-            if ($x === null) $x = ($width - $textWidth) / 2;
-            if ($y === null) $y = $height / 2;
-            
-            imagestring($image, 5, (int)$x, (int)$y, $name, $textColor);
+            $this->useFallbackFont($image, $name, $width, $height, $x, $y, $textColor);
         }
     }
 
@@ -292,45 +294,54 @@ class CertificateService
      */
     private function getFontPath($weight = 'bold', $style = 'normal'): ?string
     {
-        // 1. Check for specific font file in storage/app/fonts/
-        // You should upload a .ttf file to storage/app/fonts/certificate-font.ttf
-        $customFontPath = storage_path('app/fonts/certificate-font.ttf');
-        if (file_exists($customFontPath)) {
-            return $customFontPath;
+        $fontName = 'Roboto-Regular.ttf';
+        if ($weight === 'bold') {
+            $fontName = 'Roboto-Bold.ttf';
         }
 
-        // 2. Check for other common fonts in storage/app/fonts/
+        $localPath = storage_path('app/fonts/' . $fontName);
+
+        // 1. Check if font exists locally
+        if (file_exists($localPath)) {
+            return $localPath;
+        }
+
+        // 2. Download from Google Fonts (GitHub mirror for direct raw file access)
+        // Using Apache OpenSans or Roboto from reliable source
+        $url = '';
+        if ($weight === 'bold') {
+            $url = 'https://github.com/google/fonts/raw/main/apache/roboto/Roboto-Bold.ttf';
+        } else {
+            $url = 'https://github.com/google/fonts/raw/main/apache/roboto/Roboto-Regular.ttf';
+        }
+
+        try {
+            // Ensure directory exists
+            if (!file_exists(dirname($localPath))) {
+                mkdir(dirname($localPath), 0755, true);
+            }
+
+            // Download file
+            $content = file_get_contents($url);
+            if ($content) {
+                file_put_contents($localPath, $content);
+                return $localPath;
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to download Google Font: ' . $e->getMessage());
+        }
+
+        // 3. Fallback to existing logic (system paths) if download fails
         $families = ['Roboto', 'OpenSans', 'Lato', 'Arial']; 
         $suffixes = ['-Bold', '-Regular', 'Bold', 'Regular', ''];
 
         foreach ($families as $family) {
             foreach ($suffixes as $suffix) {
                 $filename = $family . $suffix . '.ttf';
-                $localPath = storage_path('app/fonts/' . $filename);
-                if (file_exists($localPath)) {
-                    return $localPath;
+                $path = storage_path('app/fonts/' . $filename);
+                if (file_exists($path)) {
+                    return $path;
                 }
-            }
-        }
-
-        // 3. Fallback Layout: if no font found, return null to trigger built-in font (which is tiny)
-        // OR better: try to find *any* .ttf file in the fonts directory
-        $files = glob(storage_path('app/fonts/*.ttf'));
-        if ($files && count($files) > 0) {
-            return $files[0];
-        }
-
-        // 4. System paths (Least reliable on shared hosting)
-        $systemPaths = [
-            '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
-            '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
-            '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
-            '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf',
-        ];
-
-        foreach ($systemPaths as $path) {
-            if (file_exists($path)) {
-                return $path;
             }
         }
 
@@ -347,5 +358,25 @@ class CertificateService
         unlink($tempPath);
         
         return 'data:image/png;base64,' . base64_encode($imageData);
+    }
+
+    /**
+     * Fallback to built-in font if TrueType fails.
+     */
+    private function useFallbackFont($image, $name, $width, $height, $x, $y, $textColor)
+    {
+        // Built-in font 5 is the largest
+        $fw = imagefontwidth(5);
+        $fh = imagefontheight(5);
+        $len = strlen($name);
+        $textWidth = $fw * $len;
+        
+        if ($x === null) $x = ($width - $textWidth) / 2;
+        if ($y === null) {
+            // Center vertically if no Y provided
+            $y = ($height - $fh) / 2;
+        }
+        
+        imagestring($image, 5, (int)$x, (int)$y, $name, $textColor);
     }
 }
